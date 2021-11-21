@@ -3,29 +3,50 @@ package com.procrastimax.stripebuddy
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : Activity() {
+const val MainActivityTAG = "MainActivity"
 
-    val api = ApiComm()
+class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_rgb)
 
-        val btn = findViewById<Button>(R.id.button)
-        val edit_r = findViewById<EditText>(R.id.edit_r_value)
-        val edit_g = findViewById<EditText>(R.id.edit_g_value)
-        val edit_b = findViewById<EditText>(R.id.edit_b_value)
+        val rgbController = RGBController()
+        val sliderFragment = RGBSliderFragment.newInstance(rgbController)
+        val exactFragment = RGBExactFragment.newInstance(rgbController)
 
-        btn.setOnClickListener {
-            api.setValues(edit_r.text.toString().toInt(), edit_g.text.toString().toInt(), edit_b.text.toString().toInt())
+
+        switchFragment(sliderFragment)
+
+        val bottomNavView = this.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.item_slider -> {
+                    switchFragment(sliderFragment)
+                    true
+                }
+                /*R.id.item_wheel -> {
+                    true
+                }*/
+                R.id.item_exact -> {
+                    switchFragment(exactFragment)
+                    true
+                }
+                else -> false
+            }
         }
+        // unset reselected listener - so double pressing an item does not result in overhead
+        bottomNavView.setOnItemReselectedListener { }
+    }
 
-        if (api.checkHealth()){
-            Toast.makeText(this, "API is alive!", Toast.LENGTH_SHORT).show()
+    private fun switchFragment(fragment : Fragment){
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.frameLayout, fragment)
+            commit()
         }
     }
 }

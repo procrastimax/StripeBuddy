@@ -4,7 +4,9 @@ import android.util.Log
 import okhttp3.*
 import java.io.IOException
 
-public const val TAG: String = "ApiComm"
+const val TAG: String = "API"
+
+// TODO: wait for result of execRequest with Futures?
 
 /**
  * ApiComm - a class to establish
@@ -15,10 +17,9 @@ class ApiComm {
     private val HEALTH_URL: String = "health"
     private val RED_VALUE_URL: String = "r/<VALUE>"
     private val GREEN_VALUE_URL: String = "g/<VALUE>"
-    private val BLUE_VALUE_URL: String = "n/<VALUE>"
+    private val BLUE_VALUE_URL: String = "b/<VALUE>"
     private val ALL_VALUE_URL: String = "all/<VALUE1>,<VALUE2>,<VALUE3>"
 
-    private val model = RGBViewModel()
     private val client = OkHttpClient()
 
     /**
@@ -32,6 +33,7 @@ class ApiComm {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e(TAG, "URL: ${call.request().url} - Exception: $e")
             }
+
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     Log.d(TAG, "URL: ${call.request().url} - [${response.code}]")
@@ -52,14 +54,10 @@ class ApiComm {
      * @return Boolean - returns success indication by checking HTTP status
      */
     fun setRedValue(value: Int): Boolean {
-        if (model.setRedValue(value)) {
-            val url =
-                BASE_URL + RED_VALUE_URL.replace("<VALUE>", model.getRedValue().toString())
-            val request: Request = Request.Builder().url(url).build()
-            execRequest(request);
-            return true
-        }
-        return false;
+        val url = BASE_URL + RED_VALUE_URL.replace("<VALUE>", value.toString())
+        val request: Request = Request.Builder().url(url).build()
+        execRequest(request);
+        return true
     }
 
     /**
@@ -68,14 +66,11 @@ class ApiComm {
      * @return Boolean - returns success indication by checking HTTP status
      */
     fun setGreenValue(value: Int): Boolean {
-        if (model.setGreenValue(value)) {
-            val url =
-                BASE_URL + GREEN_VALUE_URL.replace("<VALUE>", model.getGreenValue().toString())
-            val request: Request = Request.Builder().url(url).build()
-            execRequest(request);
-            return true
-        }
-        return false;
+        val url =
+            BASE_URL + GREEN_VALUE_URL.replace("<VALUE>", value.toString())
+        val request: Request = Request.Builder().url(url).build()
+        execRequest(request);
+        return true
     }
 
     /**
@@ -84,14 +79,10 @@ class ApiComm {
      * @return Boolean - returns success indication by checking HTTP status
      */
     fun setBlueValue(value: Int): Boolean {
-        if (model.setBlueValue(value)) {
-            val url =
-                BASE_URL + BLUE_VALUE_URL.replace("<VALUE>", model.getBlueValue().toString())
-            val request: Request = Request.Builder().url(url).build()
-            execRequest(request);
-            return true
-        }
-        return false;
+        val url = BASE_URL + BLUE_VALUE_URL.replace("<VALUE>", value.toString())
+        val request: Request = Request.Builder().url(url).build()
+        execRequest(request);
+        return true
     }
 
     /**
@@ -100,16 +91,12 @@ class ApiComm {
      * @return Boolean - returns success indication by checking HTTP status
      */
     fun setAlLValues(value: Int): Boolean {
-        if (model.setAllValues(value)) {
-            val url =
-                BASE_URL + ALL_VALUE_URL.replace("<VALUE1>", model.getRedValue().toString())
-                    .replace("<VALUE2>", model.getGreenValue().toString())
-                    .replace("<VALUE3>", model.getBlueValue().toString())
-            val request: Request = Request.Builder().url(url).build()
-            execRequest(request);
-            return true
-        }
-        return false;
+        val url = BASE_URL + ALL_VALUE_URL.replace("<VALUE1>", value.toString())
+            .replace("<VALUE2>", value.toString())
+            .replace("<VALUE3>", value.toString())
+        val request: Request = Request.Builder().url(url).build()
+        execRequest(request);
+        return true
     }
 
     /**
@@ -118,16 +105,12 @@ class ApiComm {
      * @return Boolean - returns success indication by checking HTTP status
      */
     fun setValues(r: Int, g: Int, b: Int): Boolean {
-        if (model.setValues(r, g, b)) {
-            val url =
-                BASE_URL + ALL_VALUE_URL.replace("<VALUE1>", model.getRedValue().toString())
-                    .replace("<VALUE2>", model.getGreenValue().toString())
-                    .replace("<VALUE3>", model.getBlueValue().toString())
-            val request: Request = Request.Builder().url(url).build()
-            execRequest(request);
-            return true
-        }
-        return false;
+        val url = BASE_URL + ALL_VALUE_URL.replace("<VALUE1>", r.toString())
+            .replace("<VALUE2>", g.toString())
+            .replace("<VALUE3>", b.toString())
+        val request: Request = Request.Builder().url(url).build()
+        execRequest(request);
+        return true
     }
 
     /**
@@ -135,13 +118,10 @@ class ApiComm {
      * @return Boolean - returns success indication by checking HTTP status
      */
     fun setOff(): Boolean {
-        if (model.setAllValues(0)) {
-            val url = BASE_URL + OFF_URL
-            val request: Request = Request.Builder().url(url).build()
-            execRequest(request)
-            return true
-        }
-        return false
+        val url = BASE_URL + OFF_URL
+        val request: Request = Request.Builder().url(url).build()
+        execRequest(request)
+        return true
     }
 
     /**

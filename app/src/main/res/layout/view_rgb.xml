@@ -1,100 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/Theme.StripeBuddy"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/constraintLayout"
+    tools:context=".MainActivity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
-        android:text="Send"
+        app:itemIconSize="24dp"
+        app:labelVisibilityMode="auto"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_b_value" />
+        app:menu="@menu/bottom_nav_menu" />
 
-    <EditText
-        android:id="@+id/edit_r_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:autofillHints="number"
-        android:ems="10"
-        android:hint="0"
-        android:inputType="numberDecimal"
-        android:minHeight="48dp"
-        android:singleLine="true"
-        android:text="0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_r_value" />
-
-    <EditText
-        android:id="@+id/edit_g_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:autofillHints="number"
-        android:ems="10"
-        android:hint="0"
-        android:inputType="numberDecimal"
-        android:minHeight="48dp"
-        android:text="0"
-        app:layout_constraintEnd_toEndOf="@+id/edit_r_value"
-        app:layout_constraintStart_toStartOf="@+id/edit_r_value"
-        app:layout_constraintTop_toBottomOf="@+id/tv_g_value" />
-
-    <EditText
-        android:id="@+id/edit_b_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:autofillHints="number"
-        android:ems="10"
-        android:hint="0"
-        android:inputType="numberDecimal"
-        android:minHeight="48dp"
-        android:text="0"
-        app:layout_constraintEnd_toEndOf="@+id/edit_g_value"
-        app:layout_constraintStart_toStartOf="@+id/edit_g_value"
-        app:layout_constraintTop_toBottomOf="@+id/tv_g_value2" />
-
-    <TextView
-        android:id="@+id/tv_r_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Value for red channel (0-100)"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/edit_r_value"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/edit_r_value"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.13999999" />
-
-    <TextView
-        android:id="@+id/tv_g_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Value for green channel (0-100)"
-        app:layout_constraintEnd_toEndOf="@+id/edit_g_value"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/edit_g_value"
-        app:layout_constraintTop_toBottomOf="@+id/edit_r_value" />
-
-    <TextView
-        android:id="@+id/tv_g_value2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Value for green channel (0-100)"
-        app:layout_constraintEnd_toEndOf="@+id/edit_b_value"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/edit_b_value"
-        app:layout_constraintTop_toBottomOf="@+id/edit_g_value" />
 </androidx.constraintlayout.widget.ConstraintLayout>
