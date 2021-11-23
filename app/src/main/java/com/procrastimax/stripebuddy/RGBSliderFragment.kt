@@ -12,11 +12,7 @@ import com.google.android.material.slider.Slider
  * Use the [RGBSliderFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class RGBSliderFragment(val controller: RGBController) : Fragment() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+class RGBSliderFragment(private val controller: RGBController) : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

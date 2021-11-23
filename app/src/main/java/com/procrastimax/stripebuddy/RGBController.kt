@@ -1,9 +1,19 @@
 package com.procrastimax.stripebuddy
 
-class RGBController {
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 
-    private val api = ApiComm()
-    private val rgbModel = RGBViewModel()
+class RGBViewModel : ViewModel() {
+
+    private val api = APIComm()
+    private val rgbModel = RGBModel()
+
+    private val r : MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>().also {
+            api.getRedValue()
+        }
+    }
 
     fun changeRedChannel(value: Int) {
         rgbModel.setAbsoluteRedValue(value)
@@ -21,8 +31,8 @@ class RGBController {
         api.setBlueValue(rgbModel.blueValue)
     }
 
-    fun getRedChannel(): Int {
-        return 0
+    fun getRedChannel(): LiveData<Int> {
+        return r
     }
 
     fun changeBrightness(value: Int, r: Int, g: Int, b: Int) {

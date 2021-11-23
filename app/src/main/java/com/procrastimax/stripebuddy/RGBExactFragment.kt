@@ -13,11 +13,7 @@ import androidx.fragment.app.Fragment
  * Use the [RGBExactFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class RGBExactFragment(val controller : RGBController) : Fragment() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+class RGBExactFragment(val controller: RGBController) : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,7 +47,7 @@ class RGBExactFragment(val controller : RGBController) : Fragment() {
          * @return A new instance of fragment RGBExactFragment.
          */
         @JvmStatic
-        fun newInstance(controller : RGBController) =
+        fun newInstance(controller: RGBController) =
             RGBExactFragment(controller)
     }
 }

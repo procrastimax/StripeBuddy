@@ -1,8 +1,7 @@
 package com.procrastimax.stripebuddy
 
-import android.app.Activity
 import android.os.Bundle
-import android.util.Log
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -15,13 +14,12 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_rgb)
 
-        val rgbController = RGBController()
+        val rgbController : RGBController by viewModels()
         val sliderFragment = RGBSliderFragment.newInstance(rgbController)
         val exactFragment = RGBExactFragment.newInstance(rgbController)
 
 
         switchFragment(sliderFragment)
-
         val bottomNavView = this.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavView.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -43,7 +41,7 @@ class MainActivity : FragmentActivity() {
         bottomNavView.setOnItemReselectedListener { }
     }
 
-    private fun switchFragment(fragment : Fragment){
+    private fun switchFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.frameLayout, fragment)
             commit()

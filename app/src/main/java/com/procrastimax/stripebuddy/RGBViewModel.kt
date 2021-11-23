@@ -7,7 +7,7 @@ import kotlin.math.roundToInt
 
 const val ModelTAG = "RGBModel"
 
-class RGBViewModel {
+class RGBModel {
     /**
      *  redValue controls the red channel intensity (0-255)
      *  it has a private setter, so the value is only set via the proper functions (e.g. setRedValue())
