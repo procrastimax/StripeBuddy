@@ -1,6 +1,5 @@
 package com.procrastimax.stripebuddy
 
-import android.util.Log
 import kotlin.math.roundToInt
 
 // TODO: Implement proper Error Handling with: https://kotlin.christmas/2019/17/ Result Type
@@ -44,14 +43,14 @@ class RGBViewModel {
      */
     fun setAbsoluteRedValue(r: Int): Boolean {
         return if (checkAbsoluteValue(r)) {
-            this.redValue = r
+            this.redValue = (r * (brightness.toFloat() / 100.0)).roundToInt()
             true
         } else {
             false
         }
     }
 
-    fun setRelativeRedValue(r: Int): Boolean {
+    /*fun setRelativeRedValue(r: Int): Boolean {
         return if (checkRelativeValue(r)) {
             this.redValue = convertRelativeToAbsoluteValue(r)
             Log.d(ModelTAG, "${r} - ${this.redValue} - ${convertRelativeToAbsoluteValue(r)} ")
@@ -59,7 +58,7 @@ class RGBViewModel {
         } else {
             false
         }
-    }
+    }*/
 
     /**
      * Sets the green channel to its absolute value
@@ -68,21 +67,21 @@ class RGBViewModel {
      */
     fun setAbsoluteGreenValue(g: Int): Boolean {
         return if (checkAbsoluteValue(g)) {
-            this.greenValue = g
+            this.greenValue = (g * (brightness.toFloat() / 100.0)).roundToInt()
             true
         } else {
             false
         }
     }
 
-    fun setRelativeGreenValue(g: Int): Boolean {
+    /*fun setRelativeGreenValue(g: Int): Boolean {
         return if (checkRelativeValue(g)) {
             this.greenValue = convertRelativeToAbsoluteValue(g)
             true
         } else {
             false
         }
-    }
+    }*/
 
     /**
      * Sets the blue channel to its absolute value
@@ -91,21 +90,21 @@ class RGBViewModel {
      */
     fun setAbsoluteBlueValue(b: Int): Boolean {
         return if (checkAbsoluteValue(b)) {
-            this.blueValue = b
+            this.blueValue = (b * (brightness.toFloat() / 100.0)).roundToInt()
             true
         } else {
             false
         }
     }
 
-    fun setRelativeBlueValue(b: Int): Boolean {
+    /*fun setRelativeBlueValue(b: Int): Boolean {
         return if (checkRelativeValue(b)) {
             this.blueValue = convertRelativeToAbsoluteValue(b)
             true
         } else {
             false
         }
-    }
+    }*/
 
     /**
      * Sets the all channels to their absolute values
@@ -116,9 +115,9 @@ class RGBViewModel {
      */
     fun setAbsoluteValues(r: Int, g: Int, b: Int): Boolean {
         return if (checkAbsoluteValue(r) && checkAbsoluteValue(g) && checkAbsoluteValue(b)) {
-            this.redValue = r
-            this.greenValue = g
-            this.blueValue = b
+            this.redValue = (r * (brightness.toFloat() / 100.0)).roundToInt()
+            this.greenValue = (g * (brightness.toFloat() / 100.0)).roundToInt()
+            this.blueValue = (b * (brightness.toFloat() / 100.0)).roundToInt()
             true
         } else {
             false
@@ -132,9 +131,10 @@ class RGBViewModel {
      */
     fun setAllValuesAbsolute(value: Int): Boolean {
         return if (checkAbsoluteValue(value)) {
-            this.redValue = value
-            this.greenValue = value
-            this.blueValue = value
+            val calcVal = (value * (brightness.toFloat() / 100.0)).roundToInt()
+            this.redValue = calcVal
+            this.greenValue = calcVal
+            this.blueValue = calcVal
             true
         } else {
             false
@@ -146,11 +146,12 @@ class RGBViewModel {
      * @param brightness : Int (0-100)
      * @return Boolean - whether the input param is within the valid range
      **/
-    fun setBrightnessValue(brightness: Int): Boolean {
+    fun setBrightnessValue(brightness: Int, r: Int, g: Int, b: Int): Boolean {
         return if (checkRelativeValue(brightness)) {
-            this.redValue = scaleColorChannel(this.redValue, brightness)!!
-            this.greenValue = scaleColorChannel(this.greenValue, brightness)!!
-            this.blueValue = scaleColorChannel(this.blueValue, brightness)!!
+            this.brightness = brightness
+            this.redValue = (r * (brightness.toFloat() / 100.0)).roundToInt()
+            this.greenValue = (g * (brightness.toFloat() / 100.0)).roundToInt()
+            this.blueValue = (b * (brightness.toFloat() / 100.0)).roundToInt()
             true
         } else {
             false
@@ -163,20 +164,6 @@ class RGBViewModel {
 
     private fun checkRelativeValue(value: Int): Boolean {
         return (value in 0..100)
-    }
-
-    /**
-     * Scales up/ down the given color channel value according to the given brightness value
-     * @param channelVal : Int - a color channel's current absolute value (0-255)
-     * @param brightness : Int - the brightness value to adjust the color channel (0-100)
-     * @return Integer as the adjusted color channel value after applying brightness factor, can return Null if the channelVal or brightness is out of a valid range
-     */
-    private fun scaleColorChannel(channelVal: Int, brightness: Int): Int? {
-        return if (checkAbsoluteValue(channelVal) && checkRelativeValue(brightness)) {
-            (brightness.toFloat() / 100.0 * channelVal.toFloat()).roundToInt()
-        } else {
-            null
-        }
     }
 
     private fun convertRelativeToAbsoluteValue(value: Int): Int {

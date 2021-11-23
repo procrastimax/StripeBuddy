@@ -4,7 +4,7 @@ import android.util.Log
 import okhttp3.*
 import java.io.IOException
 
-const val TAG: String = "API"
+const val APITAG: String = "API"
 
 // TODO: wait for result of execRequest with Futures?
 
@@ -12,13 +12,15 @@ const val TAG: String = "API"
  * ApiComm - a class to establish
  */
 class ApiComm {
-    private val BASE_URL: String = BuildConfig.API_URL
+    private val BASE_URL: String = "stripe.fritz.box"
+    private val API_PORT : Int = 8000
     private val OFF_URL: String = "off"
     private val HEALTH_URL: String = "health"
-    private val RED_VALUE_URL: String = "r/<VALUE>"
-    private val GREEN_VALUE_URL: String = "g/<VALUE>"
-    private val BLUE_VALUE_URL: String = "b/<VALUE>"
-    private val ALL_VALUE_URL: String = "all/<VALUE1>,<VALUE2>,<VALUE3>"
+    private val RED_VALUE_URL: String = "r"
+    private val GREEN_VALUE_URL: String = "g"
+    private val BLUE_VALUE_URL: String = "b"
+    private val SETVALUES_URL: String = "setValues"
+    private val GETVALUES_URL: String = "getValues"
 
     private val client = OkHttpClient()
 
@@ -28,18 +30,18 @@ class ApiComm {
      * @param request : Request - the already built OKHTTP request
      * @return Boolean - returns a boolean to indicate success of the response
      */
-    private fun execRequest(request: Request) {
+    private fun execRequest(request: Request){
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e(TAG, "URL: ${call.request().url} - Exception: $e")
+                Log.e(APITAG, "URL: ${call.request().url} - Exception: $e")
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    Log.d(TAG, "URL: ${call.request().url} - [${response.code}]")
+                    Log.d(APITAG, "URL: ${call.request().url} - [${response.code}]")
                 } else {
                     Log.w(
-                        TAG,
+                        APITAG,
                         "URL: ${call.request().url} - [${response.code}] Response: ${response.body}"
                     )
                 }
@@ -54,10 +56,20 @@ class ApiComm {
      * @return Boolean - returns success indication by checking HTTP status
      */
     fun setRedValue(value: Int): Boolean {
-        val url = BASE_URL + RED_VALUE_URL.replace("<VALUE>", value.toString())
+        val url: HttpUrl =
+            HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT).addPathSegment(RED_VALUE_URL)
+                .addPathSegment(value.toString())
+                .build()
+        val request: Request = Request.Builder().url(url).build()
+        execRequest(request)
+        return true
+    }
+
+    fun getRedValue(): Int {
+        val url = "$BASE_URL$RED_VALUE_URL/{value.toString()}"
         val request: Request = Request.Builder().url(url).build()
         execRequest(request);
-        return true
+        return 0
     }
 
     /**
@@ -66,8 +78,10 @@ class ApiComm {
      * @return Boolean - returns success indication by checking HTTP status
      */
     fun setGreenValue(value: Int): Boolean {
-        val url =
-            BASE_URL + GREEN_VALUE_URL.replace("<VALUE>", value.toString())
+        val url: HttpUrl =
+            HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT).addPathSegment(GREEN_VALUE_URL)
+                .addPathSegment(value.toString())
+                .build()
         val request: Request = Request.Builder().url(url).build()
         execRequest(request);
         return true
@@ -79,21 +93,10 @@ class ApiComm {
      * @return Boolean - returns success indication by checking HTTP status
      */
     fun setBlueValue(value: Int): Boolean {
-        val url = BASE_URL + BLUE_VALUE_URL.replace("<VALUE>", value.toString())
-        val request: Request = Request.Builder().url(url).build()
-        execRequest(request);
-        return true
-    }
-
-    /**
-     * Creates and executes the API call to change all channels to the specified value.
-     * @param value : Int (0-255)
-     * @return Boolean - returns success indication by checking HTTP status
-     */
-    fun setAlLValues(value: Int): Boolean {
-        val url = BASE_URL + ALL_VALUE_URL.replace("<VALUE1>", value.toString())
-            .replace("<VALUE2>", value.toString())
-            .replace("<VALUE3>", value.toString())
+        val url: HttpUrl =
+            HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT).addPathSegment(BLUE_VALUE_URL)
+                .addPathSegment(value.toString())
+                .build()
         val request: Request = Request.Builder().url(url).build()
         execRequest(request);
         return true
@@ -105,11 +108,13 @@ class ApiComm {
      * @return Boolean - returns success indication by checking HTTP status
      */
     fun setValues(r: Int, g: Int, b: Int): Boolean {
-        val url = BASE_URL + ALL_VALUE_URL.replace("<VALUE1>", r.toString())
-            .replace("<VALUE2>", g.toString())
-            .replace("<VALUE3>", b.toString())
+        val url: HttpUrl =
+            HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT).addPathSegment(SETVALUES_URL)
+                .addQueryParameter("r", r.toString()).addQueryParameter("g", g.toString())
+                .addQueryParameter("b", b.toString())
+                .build()
         val request: Request = Request.Builder().url(url).build()
-        execRequest(request);
+        execRequest(request)
         return true
     }
 
@@ -118,7 +123,8 @@ class ApiComm {
      * @return Boolean - returns success indication by checking HTTP status
      */
     fun setOff(): Boolean {
-        val url = BASE_URL + OFF_URL
+        val url: HttpUrl =
+            HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT).addPathSegment(OFF_URL).build()
         val request: Request = Request.Builder().url(url).build()
         execRequest(request)
         return true
@@ -129,7 +135,8 @@ class ApiComm {
      * @return Boolean - returns true if the backend properly response with HTTP 200 code, else returns false
      */
     fun checkHealth(): Boolean {
-        val url = BASE_URL + HEALTH_URL
+        val url: HttpUrl =
+            HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT).addPathSegment(HEALTH_URL).build()
         val request: Request = Request.Builder().url(url).build()
         execRequest(request)
         return true

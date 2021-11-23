@@ -1,20 +1,18 @@
 package com.procrastimax.stripebuddy
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
-import android.widget.Toast
-import com.google.android.material.tabs.TabLayout
+import androidx.fragment.app.Fragment
+import com.google.android.material.slider.Slider
 
 /**
  * A simple [Fragment] subclass.
  * Use the [RGBSliderFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class RGBSliderFragment(val controller : RGBController) : Fragment() {
+class RGBSliderFragment(val controller: RGBController) : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,59 +29,72 @@ class RGBSliderFragment(val controller : RGBController) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val redChannelSlider = view.findViewById<SeekBar>(R.id.slider_r)
-        val greenChannelSlider = view.findViewById<SeekBar>(R.id.slider_g)
-        val blueChannelSlider = view.findViewById<SeekBar>(R.id.slider_b)
-        val brightnessChannelSlider = view.findViewById<SeekBar>(R.id.slider_brightness)
+        val redChannelSlider = view.findViewById<Slider>(R.id.slider_r)
+        val greenChannelSlider = view.findViewById<Slider>(R.id.slider_g)
+        val blueChannelSlider = view.findViewById<Slider>(R.id.slider_b)
+        val brightnessChannelSlider = view.findViewById<Slider>(R.id.slider_brightness)
 
-        redChannelSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+        redChannelSlider.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                controller.changeRedChannel(value.toInt())
+            }
+        }
+        redChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: Slider) {
             }
 
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(p0: SeekBar?) {
-                controller.changeRedChannel(p0?.progress!!)
-            }
-        })
-
-        greenChannelSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-            }
-
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(p0: SeekBar?) {
-                controller.changeGreenChannel(p0?.progress!!)
+            override fun onStopTrackingTouch(slider: Slider) {
+                // check current value of RGB and slider according
             }
         })
 
-        blueChannelSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+
+        greenChannelSlider.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                controller.changeGreenChannel(value.toInt())
+            }
+        }
+        greenChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: Slider) {
             }
 
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(p0: SeekBar?) {
-                controller.changeBlueChannel(p0?.progress!!)
-            }
-        })
-
-        brightnessChannelSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-            }
-
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(p0: SeekBar?) {
-                controller.changeBrightness(p0?.progress!!, redChannelSlider.progress, greenChannelSlider.progress, blueChannelSlider.progress)
+            override fun onStopTrackingTouch(slider: Slider) {
+                // check current value of RGB and slider according
             }
         })
 
+        blueChannelSlider.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                controller.changeBlueChannel(value.toInt())
+            }
+        }
+        blueChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: Slider) {
+            }
+
+            override fun onStopTrackingTouch(slider: Slider) {
+                // check current value of RGB and slider according
+            }
+        })
+
+        brightnessChannelSlider.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                controller.changeBrightness(
+                    value.toInt(),
+                    redChannelSlider.value.toInt(),
+                    greenChannelSlider.value.toInt(),
+                    blueChannelSlider.value.toInt()
+                )
+            }
+        }
+        brightnessChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: Slider) {
+            }
+
+            override fun onStopTrackingTouch(slider: Slider) {
+                // check current value of RGB and slider according
+            }
+        })
     }
 
     companion object {
@@ -94,7 +105,7 @@ class RGBSliderFragment(val controller : RGBController) : Fragment() {
          * @return A new instance of fragment RGBSliderFragment.
          */
         @JvmStatic
-        fun newInstance(controller : RGBController) =
+        fun newInstance(controller: RGBController) =
             RGBSliderFragment(controller)
     }
 }

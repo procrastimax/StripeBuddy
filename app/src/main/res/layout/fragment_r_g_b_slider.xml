@@ -5,113 +5,224 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Widget.MaterialComponents.Slider"
     tools:context=".RGBSliderFragment">
 
 
     <TextView
         android:id="@+id/tv_red"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
         android:text="Red Channel"
-        app:layout_constraintBottom_toTopOf="@+id/slider_r"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="@+id/slider_r"
-        app:layout_constraintStart_toStartOf="@+id/slider_r" />
+        app:layout_constraintStart_toStartOf="@+id/slider_r"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_green"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
         android:text="Green Channel"
-        app:layout_constraintBottom_toTopOf="@+id/slider_g"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="@+id/slider_g"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/slider_g" />
+        app:layout_constraintStart_toStartOf="@+id/slider_g"
+        app:layout_constraintTop_toBottomOf="@+id/tv_r_0" />
 
     <TextView
         android:id="@+id/tv_blue"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
         android:text="Blue Channel"
-        app:layout_constraintBottom_toTopOf="@+id/slider_b"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="@+id/slider_b"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/slider_b" />
+        app:layout_constraintStart_toStartOf="@+id/slider_b"
+        app:layout_constraintTop_toBottomOf="@+id/tv_g_0" />
 
     <TextView
         android:id="@+id/tv_brightness"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:text="Brightness"
-        app:layout_constraintBottom_toTopOf="@+id/slider_brightness"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="@+id/slider_brightness"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/slider_brightness" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/slider_brightness"
+        app:layout_constraintTop_toBottomOf="@+id/tv_b_0" />
 
-    <SeekBar
+    <com.google.android.material.slider.Slider
         android:id="@+id/slider_r"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
-        android:max="100"
-        android:min="0"
-        android:progress="0"
-        android:progressTint="#F44336"
-        android:thumbTint="#F44336"
+        android:stepSize="1"
+        android:theme="@style/Theme.StripeBuddy"
+        android:value="0"
+        android:valueFrom="0"
+        android:valueTo="255"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_red"
+        app:thumbColor="#F44336"
+        app:tickColor="#00FFFFFF"
+        app:trackColorActive="#F44336"
+        app:trackColorInactive="#B03026"
+        tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
-    <SeekBar
+    <com.google.android.material.slider.Slider
         android:id="@+id/slider_g"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
-        android:max="100"
-        android:min="0"
-        android:progress="0"
-        android:progressTint="#4CAF50"
-        android:thumbTint="#4CAF50"
+        android:stepSize="1"
+        android:theme="@style/Theme.StripeBuddy"
+        android:value="0"
+        android:valueFrom="0"
+        android:valueTo="255"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/slider_r" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_green"
+        app:thumbColor="#4CAF50"
+        app:tickColor="#00FFFFFF"
+        app:trackColorActive="#4CAF50"
+        app:trackColorInactive="#275A29"
+        tools:ignore="SpeakableTextPresentCheck" />
 
-    <SeekBar
+    <com.google.android.material.slider.Slider
         android:id="@+id/slider_b"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
-        android:max="100"
-        android:min="0"
-        android:progress="0"
-        android:progressTint="#2196F3"
-        android:thumbTint="#2196F3"
+        android:stepSize="1"
+        android:theme="@style/Theme.StripeBuddy"
+        android:value="0"
+        android:valueFrom="0"
+        android:valueTo="255"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/slider_g" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_blue"
+        app:thumbColor="#3F51B5"
+        app:tickColor="#00FFFFFF"
+        app:trackColorActive="#3F51B5"
+        app:trackColorInactive="#252F6A"
+        tools:ignore="SpeakableTextPresentCheck" />
 
-    <SeekBar
+    <com.google.android.material.slider.Slider
         android:id="@+id/slider_brightness"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
-        android:max="100"
-        android:min="0"
-        android:progress="100"
-        android:progressTint="#000000"
-        android:thumbTint="#000000"
+        android:stepSize="1"
+        android:theme="@style/Theme.StripeBuddy"
+        android:value="100"
+        android:valueFrom="0"
+        android:valueTo="100"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_brightness"
+        app:thumbColor="#161617"
+        app:tickColor="#00FFFFFF"
+        app:trackColorActive="#FF161617"
+        app:trackColorInactive="#5C5C61"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/tv_r_0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="0"
+        app:layout_constraintStart_toStartOf="@+id/slider_r"
+        app:layout_constraintTop_toBottomOf="@+id/slider_r" />
+
+    <TextView
+        android:id="@+id/tv_r_255"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="255"
+        android:textColor="@android:color/tertiary_text_dark"
+        app:layout_constraintEnd_toEndOf="@+id/slider_r"
+        app:layout_constraintTop_toBottomOf="@+id/slider_r" />
+
+    <TextView
+        android:id="@+id/tv_g_0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="0"
+        android:textColor="@android:color/tertiary_text_dark"
+        app:layout_constraintStart_toStartOf="@+id/slider_g"
+        app:layout_constraintTop_toBottomOf="@+id/slider_g" />
+
+    <TextView
+        android:id="@+id/tv_g_255"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="255"
+        android:textColor="@android:color/tertiary_text_dark"
+        app:layout_constraintEnd_toEndOf="@+id/slider_g"
+        app:layout_constraintTop_toBottomOf="@+id/slider_g" />
+
+    <TextView
+        android:id="@+id/tv_b_0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="0"
+        android:textColor="@android:color/tertiary_text_dark"
+        app:layout_constraintStart_toStartOf="@+id/slider_b"
         app:layout_constraintTop_toBottomOf="@+id/slider_b" />
+
+    <TextView
+        android:id="@+id/tv_b_255"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="255"
+        android:textColor="@android:color/tertiary_text_dark"
+        app:layout_constraintEnd_toEndOf="@+id/slider_b"
+        app:layout_constraintTop_toBottomOf="@+id/slider_b" />
+
+    <TextView
+        android:id="@+id/tv_brightness_0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="0"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@android:color/tertiary_text_dark"
+        app:layout_constraintStart_toStartOf="@+id/slider_brightness"
+        app:layout_constraintTop_toBottomOf="@+id/slider_brightness" />
+
+    <TextView
+        android:id="@+id/tv_brightness_100"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="100"
+        app:layout_constraintEnd_toEndOf="@+id/slider_brightness"
+        app:layout_constraintTop_toBottomOf="@+id/slider_brightness" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

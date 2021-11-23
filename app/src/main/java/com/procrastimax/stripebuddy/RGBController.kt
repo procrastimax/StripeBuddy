@@ -5,27 +5,28 @@ class RGBController {
     private val api = ApiComm()
     private val rgbModel = RGBViewModel()
 
-    fun changeRedChannel(value : Int) {
-        rgbModel.setRelativeRedValue(value)
+    fun changeRedChannel(value: Int) {
+        rgbModel.setAbsoluteRedValue(value)
         println(rgbModel.toString())
         api.setRedValue(rgbModel.redValue)
     }
 
-    fun changeGreenChannel(value : Int) {
-        rgbModel.setRelativeGreenValue(value)
+    fun changeGreenChannel(value: Int) {
+        rgbModel.setAbsoluteGreenValue(value)
         api.setGreenValue(rgbModel.greenValue)
     }
 
-    fun changeBlueChannel(value : Int) {
-        rgbModel.setRelativeBlueValue(value)
+    fun changeBlueChannel(value: Int) {
+        rgbModel.setAbsoluteBlueValue(value)
         api.setBlueValue(rgbModel.blueValue)
     }
 
-    fun changeBrightness(value : Int, r : Int, g : Int, b : Int) {
-        rgbModel.setRelativeRedValue(r)
-        rgbModel.setRelativeGreenValue(g)
-        rgbModel.setRelativeBlueValue(b)
-        rgbModel.setBrightnessValue(value)
+    fun getRedChannel(): Int {
+        return 0
+    }
+
+    fun changeBrightness(value: Int, r: Int, g: Int, b: Int) {
+        rgbModel.setBrightnessValue(value, r, g, b)
         api.setValues(rgbModel.redValue, rgbModel.greenValue, rgbModel.blueValue)
     }
 

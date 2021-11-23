@@ -12,8 +12,6 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
-        // TODO: Change the backend URL
-        buildConfigField "String", "API_URL", "\"http://stripe.fritz.box:8000/\""
     }
 
     buildTypes {
