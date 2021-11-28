@@ -14,10 +14,8 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_rgb)
 
-        val rgbController : RGBController by viewModels()
-        val sliderFragment = RGBSliderFragment.newInstance(rgbController)
-        val exactFragment = RGBExactFragment.newInstance(rgbController)
-
+        val sliderFragment = RGBSliderFragment.newInstance()
+        val exactFragment = RGBExactFragment.newInstance()
 
         switchFragment(sliderFragment)
         val bottomNavView = this.findViewById<BottomNavigationView>(R.id.bottomNavigationView)

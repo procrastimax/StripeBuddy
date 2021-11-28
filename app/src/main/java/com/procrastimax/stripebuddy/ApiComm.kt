@@ -7,7 +7,7 @@ import okhttp3.Request
 
 const val APITAG: String = "API"
 
-// TODO: wait for result of execRequest with Futures?
+// TODO: maybe switch to retrofit library for HTTP requests?
 
 /**
  * APIComm - a class to establish
@@ -64,10 +64,11 @@ class APIComm {
     }
 
     fun getRedValue(): Int {
-        val url = "$BASE_URL$RED_VALUE_URL/{value.toString()}"
+        val url: HttpUrl = HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
+            .addPathSegment(RED_VALUE_URL)
+            .build()
         val request: Request = Request.Builder().url(url).build()
-        execRequest(request)
-        return 0
+        return execRequest(request)?.toInt() ?: 0
     }
 
     /**
@@ -86,6 +87,15 @@ class APIComm {
         return true
     }
 
+    fun getGreenValue(): Int {
+        val url: HttpUrl = HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
+            .addPathSegment(GREEN_VALUE_URL)
+            .build()
+        val request: Request = Request.Builder().url(url).build()
+        execRequest(request)
+        return execRequest(request)?.toInt() ?: 0
+    }
+
     /**
      * Creates and executes the API call to change the blue channel.
      * @param value : Int (0-255)
@@ -100,6 +110,15 @@ class APIComm {
         val request: Request = Request.Builder().url(url).build()
         execRequest(request)
         return true
+    }
+
+    fun getBlueValue(): Int {
+        val url: HttpUrl = HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
+            .addPathSegment(BLUE_VALUE_URL)
+            .build()
+        val request: Request = Request.Builder().url(url).build()
+        execRequest(request)
+        return execRequest(request)?.toInt() ?: 0
     }
 
     /**
@@ -117,6 +136,24 @@ class APIComm {
         val request: Request = Request.Builder().url(url).build()
         execRequest(request)
         return true
+    }
+
+    /**
+     * Creates and executes the API call to get all channel values.
+     * @return Boolean - returns success indication by checking HTTP status
+     */
+    fun getValues(): Triple<Int, Int, Int> {
+        val url: HttpUrl =
+            HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
+                .addPathSegment(GETVALUES_URL)
+                .build()
+        val request: Request = Request.Builder().url(url).build()
+        val res = execRequest(request)
+        return if (res != null) {
+            Triple(res.split(",")[0].toInt(),res.split(",")[1].toInt(),res.split(",")[2].toInt())
+        } else {
+            Triple(0,0,0)
+        }
     }
 
     /**

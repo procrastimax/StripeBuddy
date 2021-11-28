@@ -5,6 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.google.android.material.slider.Slider
 
 /**
@@ -12,7 +15,7 @@ import com.google.android.material.slider.Slider
  * Use the [RGBSliderFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class RGBSliderFragment(private val controller: RGBController) : Fragment() {
+class RGBSliderFragment() : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,9 +33,18 @@ class RGBSliderFragment(private val controller: RGBController) : Fragment() {
         val blueChannelSlider = view.findViewById<Slider>(R.id.slider_b)
         val brightnessChannelSlider = view.findViewById<Slider>(R.id.slider_brightness)
 
+        val rgbViewModel: RGBViewModel by activityViewModels<RGBViewModel>()
+
+        rgbViewModel.getRGBModel().observe(this, {
+            // update UI
+            redChannelSlider.value = it.redValue.toFloat()
+            greenChannelSlider.value = it.greenValue.toFloat()
+            blueChannelSlider.value = it.blueValue.toFloat()
+        })
+
         redChannelSlider.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
-                controller.changeRedChannel(value.toInt())
+                rgbViewModel.changeRedChannel(value.toInt())
             }
         }
         redChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
@@ -47,7 +59,7 @@ class RGBSliderFragment(private val controller: RGBController) : Fragment() {
 
         greenChannelSlider.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
-                controller.changeGreenChannel(value.toInt())
+                rgbViewModel.changeGreenChannel(value.toInt())
             }
         }
         greenChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
@@ -61,7 +73,7 @@ class RGBSliderFragment(private val controller: RGBController) : Fragment() {
 
         blueChannelSlider.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
-                controller.changeBlueChannel(value.toInt())
+                rgbViewModel.changeBlueChannel(value.toInt())
             }
         }
         blueChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
@@ -75,7 +87,7 @@ class RGBSliderFragment(private val controller: RGBController) : Fragment() {
 
         brightnessChannelSlider.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
-                controller.changeBrightness(
+                rgbViewModel.changeBrightness(
                     value.toInt(),
                     redChannelSlider.value.toInt(),
                     greenChannelSlider.value.toInt(),
@@ -101,7 +113,7 @@ class RGBSliderFragment(private val controller: RGBController) : Fragment() {
          * @return A new instance of fragment RGBSliderFragment.
          */
         @JvmStatic
-        fun newInstance(controller: RGBController) =
-            RGBSliderFragment(controller)
+        fun newInstance() =
+            RGBSliderFragment()
     }
 }
