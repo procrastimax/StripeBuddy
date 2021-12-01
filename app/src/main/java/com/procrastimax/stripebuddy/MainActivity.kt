@@ -1,7 +1,6 @@
 package com.procrastimax.stripebuddy
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -25,9 +24,6 @@ class MainActivity : FragmentActivity() {
                     switchFragment(sliderFragment)
                     true
                 }
-                /*R.id.item_wheel -> {
-                    true
-                }*/
                 R.id.item_exact -> {
                     switchFragment(exactFragment)
                     true

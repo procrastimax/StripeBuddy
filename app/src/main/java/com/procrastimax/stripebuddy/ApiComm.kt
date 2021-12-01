@@ -17,6 +17,7 @@ class APIComm {
     private val API_PORT: Int = 8000
     private val OFF_URL: String = "off"
     private val HEALTH_URL: String = "health"
+    private val BRIGHTNESS_VALUE_URL: String = "brightness"
     private val RED_VALUE_URL: String = "r"
     private val GREEN_VALUE_URL: String = "g"
     private val BLUE_VALUE_URL: String = "b"
@@ -45,6 +46,35 @@ class APIComm {
         }
 
         return result
+    }
+
+    /**
+     * Creates and executes the API call to change the brightness, which affects all other channels.
+     * @param value : Int (0-100)
+     * @return Boolean - returns success indication by checking HTTP status
+     */
+    fun setBrightnessValue(value: Int): Triple<Int, Int, Int> {
+        val url: HttpUrl =
+            HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
+                .addPathSegment(BRIGHTNESS_VALUE_URL)
+                .addPathSegment(value.toString())
+                .build()
+        val request: Request = Request.Builder().url(url).build()
+        val res = execRequest(request)
+        return if (res != null) {
+            // get r,g,b values
+            Triple(res.split(",")[0].toInt(), res.split(",")[1].toInt(), res.split(",")[2].toInt())
+        } else {
+            Triple(0, 0, 0)
+        }
+    }
+
+    fun getBrightnessValue(): Int {
+        val url: HttpUrl = HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
+            .addPathSegment(BRIGHTNESS_VALUE_URL)
+            .build()
+        val request: Request = Request.Builder().url(url).build()
+        return execRequest(request)?.toInt() ?: 0
     }
 
     /**
@@ -150,9 +180,10 @@ class APIComm {
         val request: Request = Request.Builder().url(url).build()
         val res = execRequest(request)
         return if (res != null) {
-            Triple(res.split(",")[0].toInt(),res.split(",")[1].toInt(),res.split(",")[2].toInt())
+            // get r,g,b values
+            Triple(res.split(",")[0].toInt(), res.split(",")[1].toInt(), res.split(",")[2].toInt())
         } else {
-            Triple(0,0,0)
+            Triple(0, 0, 0)
         }
     }
 

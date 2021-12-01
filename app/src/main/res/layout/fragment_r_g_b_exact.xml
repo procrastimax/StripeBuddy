@@ -14,7 +14,7 @@
        app:layout_constraintBottom_toBottomOf="parent"
        app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintTop_toBottomOf="@+id/edit_b_value" />
+       app:layout_constraintTop_toBottomOf="@+id/edit_brightness_value" />
 
    <EditText
        android:id="@+id/edit_r_value"
@@ -66,6 +66,21 @@
        app:layout_constraintStart_toStartOf="@+id/edit_g_value"
        app:layout_constraintTop_toBottomOf="@+id/edit_g_value" />
 
+   <EditText
+       android:id="@+id/edit_brightness_value"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="32dp"
+       android:autofillHints="number"
+       android:ems="10"
+       android:hint="0"
+       android:inputType="numberDecimal"
+       android:minHeight="48dp"
+       android:text="0"
+       app:layout_constraintEnd_toEndOf="@+id/edit_g_value"
+       app:layout_constraintStart_toStartOf="@+id/edit_b_value"
+       app:layout_constraintTop_toBottomOf="@+id/edit_b_value" />
+
    <TextView
        android:id="@+id/tv_r_value"
        android:layout_width="wrap_content"
@@ -95,5 +110,15 @@
        app:layout_constraintEnd_toEndOf="@+id/edit_b_value"
        app:layout_constraintHorizontal_bias="0.0"
        app:layout_constraintStart_toStartOf="@+id/edit_b_value" />
+
+   <TextView
+       android:id="@+id/tv_g_value4"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="Value for brightness value (0-100)"
+       app:layout_constraintBottom_toTopOf="@+id/edit_brightness_value"
+       app:layout_constraintEnd_toEndOf="@+id/edit_brightness_value"
+       app:layout_constraintHorizontal_bias="0.0"
+       app:layout_constraintStart_toStartOf="@+id/edit_brightness_value" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

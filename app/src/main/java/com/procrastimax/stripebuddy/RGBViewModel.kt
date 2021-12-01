@@ -10,20 +10,21 @@ import kotlinx.coroutines.withContext
 
 const val ViewModelTAG = "ViewModelTAG"
 
-class RGBViewModel() : ViewModel() {
+class RGBViewModel : ViewModel() {
 
     private val api = APIComm()
 
-    private val rgbModel: MutableLiveData<RGBModel> by lazy() {
+    private val rgbModel: MutableLiveData<RGBModel> by lazy {
         MutableLiveData<RGBModel>().also {
             fetchColors()
         }
     }
 
     private fun fetchColors() {
-        viewModelScope.launch() {
+        viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 RGBModel().apply {
+                    // TODO: add check for health of API, if not available the app exits
                     val res = api.getValues()
                     setAbsoluteRedValue(res.first)
                     setAbsoluteGreenValue(res.second)
@@ -65,12 +66,18 @@ class RGBViewModel() : ViewModel() {
         }
     }
 
-    fun changeBrightness(value: Int, r: Int, g: Int, b: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            rgbModel.value?.let { model ->
-                model.setBrightnessValue(value, r, g, b)
-                api.setValues(model.redValue, model.greenValue, model.blueValue)
+    fun changeBrightness(value: Int) {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                RGBModel().apply {
+                    setBrightnessValue(value)
+                    val res = api.setBrightnessValue(value)
+                    setAbsoluteRedValue(res.first)
+                    setAbsoluteGreenValue(res.second)
+                    setAbsoluteBlueValue(res.third)
+                }
             }
+            rgbModel.value = result
         }
     }
 }

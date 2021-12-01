@@ -42,7 +42,7 @@ class RGBModel {
      */
     fun setAbsoluteRedValue(r: Int): Boolean {
         return if (checkAbsoluteValue(r)) {
-            this.redValue = (r * (brightness.toFloat() / 100.0)).roundToInt()
+            this.redValue = r
             true
         } else {
             false
@@ -56,7 +56,7 @@ class RGBModel {
      */
     fun setAbsoluteGreenValue(g: Int): Boolean {
         return if (checkAbsoluteValue(g)) {
-            this.greenValue = (g * (brightness.toFloat() / 100.0)).roundToInt()
+            this.greenValue = g
             true
         } else {
             false
@@ -70,7 +70,7 @@ class RGBModel {
      */
     fun setAbsoluteBlueValue(b: Int): Boolean {
         return if (checkAbsoluteValue(b)) {
-            this.blueValue = (b * (brightness.toFloat() / 100.0)).roundToInt()
+            this.blueValue = b
             true
         } else {
             false
@@ -86,9 +86,9 @@ class RGBModel {
      */
     fun setAbsoluteValues(r: Int, g: Int, b: Int): Boolean {
         return if (checkAbsoluteValue(r) && checkAbsoluteValue(g) && checkAbsoluteValue(b)) {
-            this.redValue = (r * (brightness.toFloat() / 100.0)).roundToInt()
-            this.greenValue = (g * (brightness.toFloat() / 100.0)).roundToInt()
-            this.blueValue = (b * (brightness.toFloat() / 100.0)).roundToInt()
+            this.redValue = r
+            this.greenValue = g
+            this.blueValue = b
             true
         } else {
             false
@@ -102,10 +102,9 @@ class RGBModel {
      */
     fun setAllValuesAbsolute(value: Int): Boolean {
         return if (checkAbsoluteValue(value)) {
-            val calcVal = (value * (brightness.toFloat() / 100.0)).roundToInt()
-            this.redValue = calcVal
-            this.greenValue = calcVal
-            this.blueValue = calcVal
+            this.redValue = value
+            this.greenValue = value
+            this.blueValue = value
             true
         } else {
             false
@@ -117,12 +116,9 @@ class RGBModel {
      * @param brightness : Int (0-100)
      * @return Boolean - whether the input param is within the valid range
      **/
-    fun setBrightnessValue(brightness: Int, r: Int, g: Int, b: Int): Boolean {
+    fun setBrightnessValue(brightness: Int): Boolean {
         return if (checkRelativeValue(brightness)) {
             this.brightness = brightness
-            this.redValue = (r * (brightness.toFloat() / 100.0)).roundToInt()
-            this.greenValue = (g * (brightness.toFloat() / 100.0)).roundToInt()
-            this.blueValue = (b * (brightness.toFloat() / 100.0)).roundToInt()
             true
         } else {
             false

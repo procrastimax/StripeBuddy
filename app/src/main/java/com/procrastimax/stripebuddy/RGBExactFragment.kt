@@ -8,14 +8,13 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 
 /**
  * A simple [Fragment] subclass.
  * Use the [RGBExactFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class RGBExactFragment() : Fragment() {
+class RGBExactFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,22 +30,25 @@ class RGBExactFragment() : Fragment() {
         val edit_r = view.findViewById<EditText>(R.id.edit_r_value)
         val edit_g = view.findViewById<EditText>(R.id.edit_g_value)
         val edit_b = view.findViewById<EditText>(R.id.edit_b_value)
+        val edit_brightness = view.findViewById<EditText>(R.id.edit_brightness_value)
 
         val send_btn = view.findViewById<Button>(R.id.button)
 
-        val rgbViewModel : RGBViewModel by activityViewModels<RGBViewModel>()
+        val rgbViewModel: RGBViewModel by activityViewModels<RGBViewModel>()
 
         rgbViewModel.getRGBModel().observe(viewLifecycleOwner) {
             // update UI
             edit_r.setText(it.redValue.toString())
             edit_g.setText(it.greenValue.toString())
             edit_b.setText(it.blueValue.toString())
+            edit_brightness.setText(it.brightness.toString())
         }
 
         send_btn.setOnClickListener {
             rgbViewModel.changeRedChannel(edit_r.text.toString().toInt())
             rgbViewModel.changeGreenChannel(edit_g.text.toString().toInt())
             rgbViewModel.changeBlueChannel(edit_b.text.toString().toInt())
+            rgbViewModel.changeBrightness(edit_brightness.text.toString().toInt())
         }
     }
 

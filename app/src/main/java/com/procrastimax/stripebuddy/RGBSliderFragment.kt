@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.google.android.material.slider.Slider
 
 /**
@@ -40,67 +38,44 @@ class RGBSliderFragment() : Fragment() {
             redChannelSlider.value = it.redValue.toFloat()
             greenChannelSlider.value = it.greenValue.toFloat()
             blueChannelSlider.value = it.blueValue.toFloat()
+            brightnessChannelSlider.value = it.brightness.toFloat()
         })
 
-        redChannelSlider.addOnChangeListener { _, value, fromUser ->
-            if (fromUser) {
-                rgbViewModel.changeRedChannel(value.toInt())
-            }
-        }
         redChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
             }
 
             override fun onStopTrackingTouch(slider: Slider) {
-                // check current value of RGB and slider according
+                rgbViewModel.changeRedChannel(slider.value.toInt())
             }
         })
 
-
-        greenChannelSlider.addOnChangeListener { _, value, fromUser ->
-            if (fromUser) {
-                rgbViewModel.changeGreenChannel(value.toInt())
-            }
-        }
         greenChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
             }
 
             override fun onStopTrackingTouch(slider: Slider) {
-                // check current value of RGB and slider according
+                rgbViewModel.changeGreenChannel(slider.value.toInt())
             }
         })
 
-        blueChannelSlider.addOnChangeListener { _, value, fromUser ->
-            if (fromUser) {
-                rgbViewModel.changeBlueChannel(value.toInt())
-            }
-        }
         blueChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
             }
 
             override fun onStopTrackingTouch(slider: Slider) {
-                // check current value of RGB and slider according
+                rgbViewModel.changeBlueChannel(slider.value.toInt())
             }
         })
 
-        brightnessChannelSlider.addOnChangeListener { _, value, fromUser ->
-            if (fromUser) {
-                rgbViewModel.changeBrightness(
-                    value.toInt(),
-                    redChannelSlider.value.toInt(),
-                    greenChannelSlider.value.toInt(),
-                    blueChannelSlider.value.toInt()
-                )
-            }
-        }
         brightnessChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
             }
 
             override fun onStopTrackingTouch(slider: Slider) {
-                // check current value of RGB and slider according
+                rgbViewModel.changeBrightness(
+                    slider.value.toInt(),
+                )
             }
         })
     }
