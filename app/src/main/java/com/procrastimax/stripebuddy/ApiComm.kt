@@ -172,7 +172,7 @@ class APIComm {
      * Creates and executes the API call to get all channel values.
      * @return Boolean - returns success indication by checking HTTP status
      */
-    fun getValues(): Triple<Int, Int, Int> {
+    fun getValues(): RGBModel.RGBBrightness {
         val url: HttpUrl =
             HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
                 .addPathSegment(GETVALUES_URL)
@@ -180,10 +180,15 @@ class APIComm {
         val request: Request = Request.Builder().url(url).build()
         val res = execRequest(request)
         return if (res != null) {
-            // get r,g,b values
-            Triple(res.split(",")[0].toInt(), res.split(",")[1].toInt(), res.split(",")[2].toInt())
+            // get r, g, b, brightness values
+            RGBModel.RGBBrightness(
+                res.split(",")[0].toInt(),
+                res.split(",")[1].toInt(),
+                res.split(",")[2].toInt(),
+                res.split(",")[3].toInt()
+            )
         } else {
-            Triple(0, 0, 0)
+            RGBModel.RGBBrightness(0, 0, 0, 100)
         }
     }
 

@@ -13,7 +13,7 @@ import com.google.android.material.slider.Slider
  * Use the [RGBSliderFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class RGBSliderFragment() : Fragment() {
+class RGBSliderFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

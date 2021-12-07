@@ -24,11 +24,11 @@ class RGBViewModel : ViewModel() {
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 RGBModel().apply {
-                    // TODO: add check for health of API, if not available the app exits
                     val res = api.getValues()
-                    setAbsoluteRedValue(res.first)
-                    setAbsoluteGreenValue(res.second)
-                    setAbsoluteBlueValue(res.third)
+                    setAbsoluteRedValue(res.r)
+                    setAbsoluteGreenValue(res.g)
+                    setAbsoluteBlueValue(res.b)
+                    setBrightnessValue(res.brightness)
                 }
             }
             rgbModel.value = result
