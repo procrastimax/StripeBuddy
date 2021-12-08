@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout"
+    android:id="@+id/slider_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Widget.MaterialComponents.Slider"
@@ -81,7 +81,7 @@
         app:tickColor="#00FFFFFF"
         app:trackColorActive="#F44336"
         app:trackColorInactive="#B03026"
-        tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <com.google.android.material.slider.Slider
         android:id="@+id/slider_g"

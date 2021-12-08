@@ -1,12 +1,15 @@
 package com.procrastimax.stripebuddy
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.google.android.material.slider.Slider
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * A simple [Fragment] subclass.
@@ -23,6 +26,16 @@ class RGBSliderFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_r_g_b_slider, container, false)
     }
 
+    // states for graying out sliders
+    private val states = arrayOf(
+        intArrayOf(-android.R.attr.state_enabled),
+    )
+
+    // colors for graying out sliders
+    private val colors = intArrayOf(
+        Color.GRAY,
+    )
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -31,7 +44,7 @@ class RGBSliderFragment : Fragment() {
         val blueChannelSlider = view.findViewById<Slider>(R.id.slider_b)
         val brightnessChannelSlider = view.findViewById<Slider>(R.id.slider_brightness)
 
-        val rgbViewModel: RGBViewModel by activityViewModels<RGBViewModel>()
+        val rgbViewModel: RGBViewModel by viewModels()
 
         rgbViewModel.getRGBModel().observe(this, {
             // update UI
@@ -39,6 +52,26 @@ class RGBSliderFragment : Fragment() {
             greenChannelSlider.value = it.greenValue.toFloat()
             blueChannelSlider.value = it.blueValue.toFloat()
             brightnessChannelSlider.value = it.brightness.toFloat()
+
+            redChannelSlider.isEnabled = rgbViewModel.isReachable
+            greenChannelSlider.isEnabled = rgbViewModel.isReachable
+            blueChannelSlider.isEnabled = rgbViewModel.isReachable
+            brightnessChannelSlider.isEnabled = rgbViewModel.isReachable
+
+            if (!rgbViewModel.isReachable) {
+                Snackbar.make(view, "API is not reachable!", Snackbar.LENGTH_LONG).show()
+                redChannelSlider.trackTintList = ColorStateList(states, colors)
+                redChannelSlider.thumbTintList = ColorStateList(states, colors)
+
+                greenChannelSlider.trackTintList = ColorStateList(states, colors)
+                greenChannelSlider.thumbTintList = ColorStateList(states, colors)
+
+                blueChannelSlider.trackTintList = ColorStateList(states, colors)
+                blueChannelSlider.thumbTintList = ColorStateList(states, colors)
+
+                brightnessChannelSlider.trackTintList = ColorStateList(states, colors)
+                brightnessChannelSlider.thumbTintList = ColorStateList(states, colors)
+            }
         })
 
         redChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {

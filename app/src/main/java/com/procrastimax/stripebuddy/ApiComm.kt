@@ -41,8 +41,8 @@ class APIComm {
             client.newCall(request).execute().use { response ->
                 result = response.body?.string()
             }
-        } catch (err: Error) {
-            Log.e(APITAG, "Error when executing GET request $err")
+        } catch (err: Exception) {
+            Log.e(APITAG, "Exception when executing GET request $err")
         }
 
         return result
@@ -188,7 +188,7 @@ class APIComm {
                 res.split(",")[3].toInt()
             )
         } else {
-            RGBModel.RGBBrightness(0, 0, 0, 100)
+            RGBModel.RGBBrightness()
         }
     }
 
@@ -214,7 +214,9 @@ class APIComm {
             HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
                 .addPathSegment(HEALTH_URL).build()
         val request: Request = Request.Builder().url(url).build()
-        execRequest(request)
-        return true
+
+        // TODO: dont check health by comparing strings lol
+        val res = execRequest(request)
+        return res == "I am alive!"
     }
 }

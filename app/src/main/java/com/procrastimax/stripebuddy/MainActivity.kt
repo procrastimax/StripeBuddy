@@ -31,8 +31,6 @@ class MainActivity : FragmentActivity() {
                 else -> false
             }
         }
-        // unset reselected listener - so double pressing an item does not result in overhead
-        bottomNavView.setOnItemReselectedListener { }
     }
 
     private fun switchFragment(fragment: Fragment) {

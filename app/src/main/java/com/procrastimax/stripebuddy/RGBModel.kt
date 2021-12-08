@@ -8,7 +8,12 @@ const val ModelTAG = "RGBModel"
 
 class RGBModel {
 
-    data class RGBBrightness(val r: Int, val g: Int, val b: Int, val brightness: Int)
+    data class RGBBrightness(
+        val r: Int = 0,
+        val g: Int = 0,
+        val b: Int = 0,
+        val brightness: Int = 100
+    )
 
     /**
      *  redValue controls the red channel intensity (0-255)

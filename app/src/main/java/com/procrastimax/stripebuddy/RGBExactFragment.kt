@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * A simple [Fragment] subclass.
@@ -34,7 +35,7 @@ class RGBExactFragment : Fragment() {
 
         val send_btn = view.findViewById<Button>(R.id.button)
 
-        val rgbViewModel: RGBViewModel by activityViewModels<RGBViewModel>()
+        val rgbViewModel: RGBViewModel by viewModels()
 
         rgbViewModel.getRGBModel().observe(viewLifecycleOwner) {
             // update UI
@@ -42,6 +43,16 @@ class RGBExactFragment : Fragment() {
             edit_g.setText(it.greenValue.toString())
             edit_b.setText(it.blueValue.toString())
             edit_brightness.setText(it.brightness.toString())
+
+            edit_r.isEnabled = rgbViewModel.isReachable
+            edit_g.isEnabled = rgbViewModel.isReachable
+            edit_b.isEnabled = rgbViewModel.isReachable
+            edit_brightness.isEnabled = rgbViewModel.isReachable
+            send_btn.isEnabled = rgbViewModel.isReachable
+
+            if (!rgbViewModel.isReachable) {
+                Snackbar.make(view, "API is not reachable!", Snackbar.LENGTH_LONG).show()
+            }
         }
 
         send_btn.setOnClickListener {
