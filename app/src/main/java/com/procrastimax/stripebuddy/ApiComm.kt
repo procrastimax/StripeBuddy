@@ -2,12 +2,11 @@ package com.procrastimax.stripebuddy
 
 import android.util.Log
 import okhttp3.HttpUrl
+import okhttp3.OkHttp
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
 const val APITAG: String = "API"
-
-// TODO: maybe switch to retrofit library for HTTP requests?
 
 /**
  * APIComm - a class to establish
@@ -26,137 +25,122 @@ class APIComm {
 
     private val client = OkHttpClient()
 
-    data class APIResponse(val reponseCode: Int, val responseBody: String)
+    data class APIResponse(val responseCode: Int, val responseBody: String?)
 
 
     /**
      * A helper function to check the response of a HTTP request and log some useful information.
      * Handles IOException of the HTTP execute function.
+     * All valid requests are returned, even ones with code 400 etc.
+     *
      * @param request : Request - the already built OKHTTP request
-     * @return Boolean - returns a boolean to indicate success of the response
+     * @return @APIResponse - returns the HTTP code and the response body string, if there was one
      */
-    private fun execRequest(request: Request): String? {
-        var result: String? = null
-        try {
+    private fun execRequest(request: Request): Result<APIResponse> {
+        return try {
             client.newCall(request).execute().use { response ->
-                result = response.body?.string()
+                Result.success(APIResponse(response.code, response.body?.string()))
             }
-        } catch (err: Exception) {
-            Log.e(APITAG, "Exception when executing GET request $err")
+        } catch (e: Exception) {
+            return Result.failure(Exception("Exception when executing GET request $e"))
         }
-
-        return result
     }
 
     /**
      * Creates and executes the API call to change the brightness, which affects all other channels.
      * @param value : Int (0-100)
-     * @return Boolean - returns success indication by checking HTTP status
      */
-    fun setBrightnessValue(value: Int): Triple<Int, Int, Int> {
+    fun setBrightnessValue(value: Int): Result<APIResponse> {
         val url: HttpUrl =
             HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
                 .addPathSegment(BRIGHTNESS_VALUE_URL)
                 .addPathSegment(value.toString())
                 .build()
         val request: Request = Request.Builder().url(url).build()
-        val res = execRequest(request)
-        return if (res != null) {
-            // get r,g,b values
-            Triple(res.split(",")[0].toInt(), res.split(",")[1].toInt(), res.split(",")[2].toInt())
-        } else {
-            Triple(0, 0, 0)
-        }
+        return execRequest(request)
     }
 
-    fun getBrightnessValue(): Int {
+    fun getBrightnessValue(): Result<APIResponse> {
         val url: HttpUrl = HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
             .addPathSegment(BRIGHTNESS_VALUE_URL)
             .build()
         val request: Request = Request.Builder().url(url).build()
-        return execRequest(request)?.toInt() ?: 0
+        return execRequest(request)
     }
 
     /**
      * Creates and executes the API call to change the red channel.
      * @param value : Int (0-255)
-     * @return Boolean - returns success indication by checking HTTP status
      */
-    fun setRedValue(value: Int): Boolean {
+    fun setRedValue(value: Int): Result<APIResponse> {
         val url: HttpUrl =
             HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
                 .addPathSegment(RED_VALUE_URL)
                 .addPathSegment(value.toString())
                 .build()
         val request: Request = Request.Builder().url(url).build()
-        execRequest(request)
-        return true
+        return execRequest(request)
     }
 
-    fun getRedValue(): Int {
+    fun getRedValue(): Result<APIResponse> {
         val url: HttpUrl = HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
             .addPathSegment(RED_VALUE_URL)
             .build()
         val request: Request = Request.Builder().url(url).build()
-        return execRequest(request)?.toInt() ?: 0
+        return execRequest(request)
     }
 
     /**
      * Creates and executes the API call to change the green channel.
      * @param value : Int (0-255)
-     * @return Boolean - returns success indication by checking HTTP status
      */
-    fun setGreenValue(value: Int): Boolean {
+    fun setGreenValue(value: Int): Result<APIResponse> {
         val url: HttpUrl =
             HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
                 .addPathSegment(GREEN_VALUE_URL)
                 .addPathSegment(value.toString())
                 .build()
         val request: Request = Request.Builder().url(url).build()
-        execRequest(request)
-        return true
+        return execRequest(request)
     }
 
-    fun getGreenValue(): Int {
+    fun getGreenValue(): Result<APIResponse> {
         val url: HttpUrl = HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
             .addPathSegment(GREEN_VALUE_URL)
             .build()
         val request: Request = Request.Builder().url(url).build()
         execRequest(request)
-        return execRequest(request)?.toInt() ?: 0
+        return execRequest(request)
     }
 
     /**
      * Creates and executes the API call to change the blue channel.
      * @param value : Int (0-255)
-     * @return Boolean - returns success indication by checking HTTP status
      */
-    fun setBlueValue(value: Int): Boolean {
+    fun setBlueValue(value: Int): Result<APIResponse> {
         val url: HttpUrl =
             HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
                 .addPathSegment(BLUE_VALUE_URL)
                 .addPathSegment(value.toString())
                 .build()
         val request: Request = Request.Builder().url(url).build()
-        execRequest(request)
-        return true
+        return execRequest(request)
     }
 
-    fun getBlueValue(): Int {
+    fun getBlueValue(): Result<APIResponse> {
         val url: HttpUrl = HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
             .addPathSegment(BLUE_VALUE_URL)
             .build()
         val request: Request = Request.Builder().url(url).build()
         execRequest(request)
-        return execRequest(request)?.toInt() ?: 0
+        return execRequest(request)
     }
 
     /**
      * Creates and executes the API call to change all channels to the 3 given values.
      * @param r,g,b : Int (0-255)
-     * @return Boolean - returns success indication by checking HTTP status
      */
-    fun setValues(r: Int, g: Int, b: Int): Boolean {
+    fun setValues(r: Int, g: Int, b: Int): Result<APIResponse> {
         val url: HttpUrl =
             HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
                 .addPathSegment(SETVALUES_URL)
@@ -164,59 +148,40 @@ class APIComm {
                 .addQueryParameter("b", b.toString())
                 .build()
         val request: Request = Request.Builder().url(url).build()
-        execRequest(request)
-        return true
+        return execRequest(request)
     }
 
     /**
      * Creates and executes the API call to get all channel values.
-     * @return Boolean - returns success indication by checking HTTP status
      */
-    fun getValues(): RGBModel.RGBBrightness {
+    fun getValues(): Result<APIResponse> {
         val url: HttpUrl =
             HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
                 .addPathSegment(GETVALUES_URL)
                 .build()
         val request: Request = Request.Builder().url(url).build()
-        val res = execRequest(request)
-        return if (res != null) {
-            // get r, g, b, brightness values
-            RGBModel.RGBBrightness(
-                res.split(",")[0].toInt(),
-                res.split(",")[1].toInt(),
-                res.split(",")[2].toInt(),
-                res.split(",")[3].toInt()
-            )
-        } else {
-            RGBModel.RGBBrightness()
-        }
+        return execRequest(request)
     }
 
     /**
      * Creates and executes the API call to change all channels to the value 0 (aka off state).
-     * @return Boolean - returns success indication by checking HTTP status
      */
-    fun setOff(): Boolean {
+    fun setOff(): Result<APIResponse> {
         val url: HttpUrl =
             HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT).addPathSegment(OFF_URL)
                 .build()
         val request: Request = Request.Builder().url(url).build()
-        execRequest(request)
-        return true
+        return execRequest(request)
     }
 
     /**
      * A check to the /health endpoint to check availability of the backend.
-     * @return Boolean - returns true if the backend properly response with HTTP 200 code, else returns false
      */
-    fun checkHealth(): Boolean {
+    fun checkHealth(): Result<APIResponse> {
         val url: HttpUrl =
             HttpUrl.Builder().scheme("http").host(BASE_URL).port(API_PORT)
                 .addPathSegment(HEALTH_URL).build()
         val request: Request = Request.Builder().url(url).build()
-
-        // TODO: dont check health by comparing strings lol
-        val res = execRequest(request)
-        return res == "I am alive!"
+        return execRequest(request)
     }
 }

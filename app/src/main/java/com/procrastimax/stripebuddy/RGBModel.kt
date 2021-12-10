@@ -1,5 +1,7 @@
 package com.procrastimax.stripebuddy
 
+import java.lang.NumberFormatException
+import kotlin.Exception
 import kotlin.math.roundToInt
 
 // TODO: Implement proper Error Handling with: https://kotlin.christmas/2019/17/ Result Type
@@ -156,5 +158,18 @@ class RGBModel {
     companion object {
         const val MIN_ABSOLUTE_VALUE: Int = 0
         const val MAX_ABSOLUTE_VALUE: Int = 255
+
+        fun parse_string_to_model(inputStr : String) : Result<RGBBrightness> {
+            val arr : List<String> = inputStr.split(",")
+            if (arr.size == 4 ){
+                try {
+                    return Result.success(RGBBrightness(r=arr[0].toInt(), g=arr[1].toInt(), b=arr[2].toInt(), brightness = arr[3].toInt()))
+                } catch (e : NumberFormatException){
+                    return Result.failure(Exception("Could not properly format RGB and brightness values! Received string: $inputStr"))
+                }
+            } else {
+                return Result.failure(Exception("Did not receive RGB and brightness value in proper format: R,G,B,Brightness! Received string: $inputStr"))
+            }
+        }
     }
 }
