@@ -11,8 +11,6 @@ import kotlinx.coroutines.withContext
 
 const val ViewModelTAG = "ViewModelTAG"
 
-// TODO: make channels individually observable, so we can reset channels on errors
-
 class RGBViewModel : ViewModel() {
 
     private val api = APIComm()
@@ -26,7 +24,11 @@ class RGBViewModel : ViewModel() {
         }
     }
 
-    private fun fetchColors() {
+    /**
+     * Retrieves current color values from the API (r,g,b,brightness) and updates the model accordingly
+     * If the API is not reachable, a specific flag is set.
+     */
+    fun fetchColors() {
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 RGBModel().apply {
@@ -40,11 +42,11 @@ class RGBViewModel : ViewModel() {
                             api.getValues().onSuccess { valueRes ->
                                 if (valueRes.responseCode == 200) {
                                     valueRes.responseBody?.let {
-                                        RGBModel.parse_string_to_model(it).onSuccess { rgbb ->
-                                            setAbsoluteRedValue(rgbb.r)
-                                            setAbsoluteGreenValue(rgbb.g)
-                                            setAbsoluteBlueValue(rgbb.b)
-                                            setBrightnessValue(rgbb.brightness)
+                                        RGBModel.parseStringToModel(it).onSuccess { rgbbr ->
+                                            setAbsoluteRedValue(rgbbr.r)
+                                            setAbsoluteGreenValue(rgbbr.g)
+                                            setAbsoluteBlueValue(rgbbr.b)
+                                            setBrightnessValue(rgbbr.brightness)
                                         }.onFailure { err ->
                                             Log.e(ViewModelTAG, "On parsing getValues result: $err")
                                         }
@@ -134,7 +136,7 @@ class RGBViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             rgbModel.value?.let { model ->
                 if (model.setAbsoluteBlueValue(value)) {
-                    api.setBlueValue(model.greenValue).onSuccess {
+                    api.setBlueValue(model.blueValue).onSuccess {
                         if (it.responseCode != 200) {
                             Log.w(
                                 ViewModelTAG,
@@ -150,41 +152,21 @@ class RGBViewModel : ViewModel() {
     }
 
     fun changeBrightness(value: Int) {
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                RGBModel().apply {
-                    if (setBrightnessValue(value)) {
-                        api.setBrightnessValue(value).onSuccess { res ->
-                            if (res.responseCode == 200) {
-                                res.responseBody?.let {
-                                    RGBModel.parse_string_to_model(res.responseBody)
-                                        .onSuccess { rgbb ->
-                                            setAbsoluteRedValue(rgbb.r)
-                                            setAbsoluteGreenValue(rgbb.g)
-                                            setAbsoluteBlueValue(rgbb.b)
-                                        }.onFailure { rgbbErr ->
-                                        Log.w(
-                                            ViewModelTAG,
-                                            "Error when parsing response body: $rgbbErr "
-                                        )
-                                    }
-                                } ?: run {
-                                    Log.w(
-                                        ViewModelTAG,
-                                        "Response body is empty, but expected response! HTTP Code: ${res.responseCode}  ${res.responseBody}"
-                                    )
-                                }
-                            }
-                        }.onFailure {
-                            Log.e(
+        viewModelScope.launch(Dispatchers.IO) {
+            rgbModel.value?.let { model ->
+                if (model.setBrightnessValue(value)) {
+                    api.setBrightnessValue(model.brightness).onSuccess {
+                        if (it.responseCode != 200) {
+                            Log.w(
                                 ViewModelTAG,
-                                "Error when requesting brightness change! Error: ${it.localizedMessage}"
+                                "Something went wrong when trying to change brightness! HTTP Code: ${it.responseCode}  ${it.responseBody}"
                             )
                         }
+                    }.onFailure { err ->
+                        Log.e(ViewModelTAG, "Could not change brightness! Error: $err")
                     }
                 }
             }
-            rgbModel.value = result
         }
     }
 }

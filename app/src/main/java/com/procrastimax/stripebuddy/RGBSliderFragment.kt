@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.slider.Slider
@@ -44,6 +45,11 @@ class RGBSliderFragment : Fragment() {
         val blueChannelSlider = view.findViewById<Slider>(R.id.slider_b)
         val brightnessChannelSlider = view.findViewById<Slider>(R.id.slider_brightness)
 
+        val tvRedValue = view.findViewById<TextView>(R.id.tv_val_r_channel)
+        val tvGreenValue = view.findViewById<TextView>(R.id.tv_val_g_channel)
+        val tvBlueValue = view.findViewById<TextView>(R.id.tv_val_b_channel)
+        val tvBrightnessValue = view.findViewById<TextView>(R.id.tv_val_brightness_channel)
+
         val rgbViewModel: RGBViewModel by viewModels()
 
         rgbViewModel.getRGBModel().observe(this, {
@@ -57,6 +63,11 @@ class RGBSliderFragment : Fragment() {
             greenChannelSlider.isEnabled = rgbViewModel.isReachable
             blueChannelSlider.isEnabled = rgbViewModel.isReachable
             brightnessChannelSlider.isEnabled = rgbViewModel.isReachable
+
+            tvRedValue.text = it.redValue.toString()
+            tvGreenValue.text = it.greenValue.toString()
+            tvBlueValue.text = it.blueValue.toString()
+            tvBrightnessValue.text = it.brightness.toString()
 
             if (!rgbViewModel.isReachable) {
                 Snackbar.make(view, "API is not reachable!", Snackbar.LENGTH_LONG).show()
@@ -80,6 +91,7 @@ class RGBSliderFragment : Fragment() {
 
             override fun onStopTrackingTouch(slider: Slider) {
                 rgbViewModel.changeRedChannel(slider.value.toInt())
+                rgbViewModel.fetchColors()
             }
         })
 
@@ -89,6 +101,7 @@ class RGBSliderFragment : Fragment() {
 
             override fun onStopTrackingTouch(slider: Slider) {
                 rgbViewModel.changeGreenChannel(slider.value.toInt())
+                rgbViewModel.fetchColors()
             }
         })
 
@@ -98,6 +111,7 @@ class RGBSliderFragment : Fragment() {
 
             override fun onStopTrackingTouch(slider: Slider) {
                 rgbViewModel.changeBlueChannel(slider.value.toInt())
+                rgbViewModel.fetchColors()
             }
         })
 
@@ -109,6 +123,7 @@ class RGBSliderFragment : Fragment() {
                 rgbViewModel.changeBrightness(
                     slider.value.toInt(),
                 )
+                rgbViewModel.fetchColors()
             }
         })
     }

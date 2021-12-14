@@ -11,41 +11,38 @@
 
     <TextView
         android:id="@+id/tv_red"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="48dp"
         android:text="Red Channel"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintEnd_toEndOf="@+id/slider_r"
+        app:layout_constraintEnd_toStartOf="@+id/tv_val_r_channel"
         app:layout_constraintStart_toStartOf="@+id/slider_r"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_green"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="48dp"
         android:text="Green Channel"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintEnd_toEndOf="@+id/slider_g"
+        app:layout_constraintEnd_toStartOf="@+id/tv_val_g_channel"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/slider_g"
         app:layout_constraintTop_toBottomOf="@+id/tv_r_0" />
 
     <TextView
         android:id="@+id/tv_blue"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="48dp"
         android:text="Blue Channel"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintEnd_toEndOf="@+id/slider_b"
+        app:layout_constraintEnd_toStartOf="@+id/tv_val_b_channel"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/slider_b"
         app:layout_constraintTop_toBottomOf="@+id/tv_g_0" />
@@ -54,10 +51,10 @@
         android:id="@+id/tv_brightness"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="48dp"
         android:text="Brightness"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintEnd_toEndOf="@+id/slider_brightness"
+        app:layout_constraintEnd_toStartOf="@+id/tv_val_brightness_channel"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/slider_brightness"
         app:layout_constraintTop_toBottomOf="@+id/tv_b_0" />
@@ -224,5 +221,45 @@
         android:text="100"
         app:layout_constraintEnd_toEndOf="@+id/slider_brightness"
         app:layout_constraintTop_toBottomOf="@+id/slider_brightness" />
+
+    <TextView
+        android:id="@+id/tv_val_r_channel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="0"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/slider_r"
+        app:layout_constraintTop_toTopOf="@+id/tv_red" />
+
+    <TextView
+        android:id="@+id/tv_val_g_channel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="0"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/slider_g"
+        app:layout_constraintTop_toTopOf="@+id/tv_green" />
+
+    <TextView
+        android:id="@+id/tv_val_b_channel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="0"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/slider_b"
+        app:layout_constraintTop_toTopOf="@+id/tv_blue" />
+
+    <TextView
+        android:id="@+id/tv_val_brightness_channel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="0"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/slider_brightness"
+        app:layout_constraintTop_toTopOf="@+id/tv_brightness" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

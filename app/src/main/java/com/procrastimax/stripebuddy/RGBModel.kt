@@ -1,49 +1,25 @@
 package com.procrastimax.stripebuddy
 
-import java.lang.NumberFormatException
-import kotlin.Exception
-import kotlin.math.roundToInt
+data class RGBModel(val r: Int = 0, val g: Int = 0, val b: Int = 0, val br: Int = 100) {
 
-// TODO: Implement proper Error Handling with: https://kotlin.christmas/2019/17/ Result Type
-
-const val ModelTAG = "RGBModel"
-
-class RGBModel {
-
-    data class RGBBrightness(
-        val r: Int = 0,
-        val g: Int = 0,
-        val b: Int = 0,
-        val brightness: Int = 100
-    )
-
-    /**
-     *  redValue controls the red channel intensity (0-255)
-     *  it has a private setter, so the value is only set via the proper functions (e.g. setRedValue())
-     **/
     var redValue: Int = 0
         private set
 
-    /**
-     * greenValue controls the green channel intensity (0-255)
-     * it has a private setter, so the value is only set via the proper functions (e.g. setGreenValue())
-     */
     var greenValue: Int = 0
         private set
 
-    /**
-     * blueValue controls the blue channel intensity (0-255)
-     * it has a private setter, so the value is only set via the proper functions (e.g. setBlueValue())
-     */
     var blueValue: Int = 0
         private set
 
-    /**
-     * brightness controls the brightness of each channel (0-100)
-     * When changed, the brightness factor scales all the RGB-Channels up or down, which corresponds to the brightness
-     */
     var brightness: Int = 100
         private set
+
+    init {
+        setAbsoluteRedValue(r)
+        setAbsoluteGreenValue(g)
+        setAbsoluteBlueValue(b)
+        setBrightnessValue(br)
+    }
 
     /**
      * Sets the red channel to its absolute value (0-255)
@@ -80,24 +56,6 @@ class RGBModel {
      */
     fun setAbsoluteBlueValue(b: Int): Boolean {
         return if (checkAbsoluteValue(b)) {
-            this.blueValue = b
-            true
-        } else {
-            false
-        }
-    }
-
-    /**
-     * Sets the all channels to their absolute values
-     * @param r : Int (0-255)
-     * @param g : Int (0-255)
-     * @param b : Int (0-255)
-     * @return Boolean - whether the input param is within the valid range
-     */
-    fun setAbsoluteValues(r: Int, g: Int, b: Int): Boolean {
-        return if (checkAbsoluteValue(r) && checkAbsoluteValue(g) && checkAbsoluteValue(b)) {
-            this.redValue = r
-            this.greenValue = g
             this.blueValue = b
             true
         } else {
@@ -143,14 +101,6 @@ class RGBModel {
         return (value in 0..100)
     }
 
-    private fun convertRelativeToAbsoluteValue(value: Int): Int {
-        return if (checkRelativeValue(value)) {
-            (value.toFloat() / 100.0 * MAX_ABSOLUTE_VALUE.toFloat()).roundToInt()
-        } else {
-            0
-        }
-    }
-
     override fun toString(): String {
         return "RGBViewModel(red_value=$redValue, green_value=$greenValue, blue_value=$blueValue, brightness=$brightness)"
     }
@@ -159,16 +109,23 @@ class RGBModel {
         const val MIN_ABSOLUTE_VALUE: Int = 0
         const val MAX_ABSOLUTE_VALUE: Int = 255
 
-        fun parse_string_to_model(inputStr : String) : Result<RGBBrightness> {
-            val arr : List<String> = inputStr.split(",")
-            if (arr.size == 4 ){
+        fun parseStringToModel(inputStr: String): Result<RGBModel> {
+            val arr: List<String> = inputStr.split(",")
+            return if (arr.size == 4) {
                 try {
-                    return Result.success(RGBBrightness(r=arr[0].toInt(), g=arr[1].toInt(), b=arr[2].toInt(), brightness = arr[3].toInt()))
-                } catch (e : NumberFormatException){
-                    return Result.failure(Exception("Could not properly format RGB and brightness values! Received string: $inputStr"))
+                    Result.success(
+                        RGBModel(
+                            r = arr[0].toInt(),
+                            g = arr[1].toInt(),
+                            b = arr[2].toInt(),
+                            br = arr[3].toInt()
+                        )
+                    )
+                } catch (e: NumberFormatException) {
+                    Result.failure(Exception("Could not properly format RGB and brightness values! Received string: $inputStr"))
                 }
             } else {
-                return Result.failure(Exception("Did not receive RGB and brightness value in proper format: R,G,B,Brightness! Received string: $inputStr"))
+                Result.failure(Exception("Did not receive RGB and brightness value in proper format: R,G,B,Brightness! Received string: $inputStr"))
             }
         }
     }

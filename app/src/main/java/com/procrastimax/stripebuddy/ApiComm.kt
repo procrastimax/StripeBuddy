@@ -1,8 +1,6 @@
 package com.procrastimax.stripebuddy
 
-import android.util.Log
 import okhttp3.HttpUrl
-import okhttp3.OkHttp
 import okhttp3.OkHttpClient
 import okhttp3.Request
 

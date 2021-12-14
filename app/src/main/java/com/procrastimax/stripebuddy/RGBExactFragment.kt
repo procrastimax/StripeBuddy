@@ -60,6 +60,8 @@ class RGBExactFragment : Fragment() {
             rgbViewModel.changeGreenChannel(edit_g.text.toString().toInt())
             rgbViewModel.changeBlueChannel(edit_b.text.toString().toInt())
             rgbViewModel.changeBrightness(edit_brightness.text.toString().toInt())
+
+            rgbViewModel.fetchColors()
         }
     }
 
