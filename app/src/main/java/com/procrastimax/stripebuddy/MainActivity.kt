@@ -12,25 +12,8 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_rgb)
-
         val sliderFragment = RGBSliderFragment.newInstance()
-        val exactFragment = RGBExactFragment.newInstance()
-
         switchFragment(sliderFragment)
-        val bottomNavView = this.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.item_slider -> {
-                    switchFragment(sliderFragment)
-                    true
-                }
-                R.id.item_exact -> {
-                    switchFragment(exactFragment)
-                    true
-                }
-                else -> false
-            }
-        }
     }
 
     private fun switchFragment(fragment: Fragment) {
