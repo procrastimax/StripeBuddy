@@ -52,7 +52,7 @@ class RGBSliderFragment : Fragment() {
 
         val rgbViewModel: RGBViewModel by viewModels()
 
-        rgbViewModel.getRGBModel().observe(this, {
+        rgbViewModel.getRGBModel().observe(this) {
             // update UI
             redChannelSlider.value = it.redValue.toFloat()
             greenChannelSlider.value = it.greenValue.toFloat()
@@ -83,7 +83,7 @@ class RGBSliderFragment : Fragment() {
                 brightnessChannelSlider.trackTintList = ColorStateList(states, colors)
                 brightnessChannelSlider.thumbTintList = ColorStateList(states, colors)
             }
-        })
+        }
 
         redChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
