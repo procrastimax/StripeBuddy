@@ -9,7 +9,6 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             app:title="Endpoint"
-            android:inputType="textUri"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
@@ -18,7 +17,6 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="Port"
-            android:inputType="number"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 

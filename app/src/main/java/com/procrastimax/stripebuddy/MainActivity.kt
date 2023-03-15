@@ -26,10 +26,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun switchFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.frameLayout, fragment)
-            commit()
-        }
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.frameLayout, fragment)
+            .commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
