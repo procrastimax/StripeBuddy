@@ -4,20 +4,20 @@
     <PreferenceCategory app:title="API">
 
         <EditTextPreference
-            app:key="endpoint"
             android:defaultValue="http://stripe.fritz.box"
             android:selectAllOnFocus="true"
-            android:singleLineTitle="true"
             android:singleLine="true"
+            android:singleLineTitle="true"
+            app:key="endpoint"
             app:title="Endpoint"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
-            android:key="port"
             android:defaultValue="80"
+            android:key="port"
             android:selectAllOnFocus="true"
-            android:singleLineTitle="true"
             android:singleLine="true"
+            android:singleLineTitle="true"
             android:title="Port"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>

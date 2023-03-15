@@ -18,8 +18,11 @@ class RGBViewModel : ViewModel() {
     // a variable which stores if the API is reachable and therefore the values from the model can be used in this view
     var isReachable: Boolean = false
 
-    private val rgbModel: MutableLiveData<RGBModel> by lazy {
-        MutableLiveData<RGBModel>().also {
+    private val test_endpoint: String = "192.168.179.120"
+    private val test_port: Int = 80
+
+    private val rgbaModel: MutableLiveData<RGBAModel> by lazy {
+        MutableLiveData<RGBAModel>().also {
             fetchColors()
         }
     }
@@ -28,134 +31,176 @@ class RGBViewModel : ViewModel() {
      * Retrieves current color values from the API (r,g,b,brightness) and updates the model accordingly
      * If the API is not reachable, a specific flag is set.
      */
-    fun fetchColors() {
+    private fun fetchColors() {
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
-                RGBModel().apply {
-                    // check APIs health status
-                    api.checkHealth().onSuccess { res ->
-                        // check status code
-                        if (res.responseCode == 200) {
+                RGBAModel().apply {
+                    api.getValues(test_endpoint, test_port).onSuccess { valueRes ->
+                        if (valueRes.responseCode == 200) {
                             isReachable = true
 
-                            // make getValues call, check response for formatting and reachability
-                            api.getValues().onSuccess { valueRes ->
-                                if (valueRes.responseCode == 200) {
-                                    valueRes.responseBody?.let {
-                                        RGBModel.parseStringToModel(it).onSuccess { rgbbr ->
-                                            setAbsoluteRedValue(rgbbr.r)
-                                            setAbsoluteGreenValue(rgbbr.g)
-                                            setAbsoluteBlueValue(rgbbr.b)
-                                            setBrightnessValue(rgbbr.brightness)
-                                        }.onFailure { err ->
-                                            Log.e(ViewModelTAG, "On parsing getValues result: $err")
-                                        }
-                                    } ?: run {
-                                        Log.w(
+                            if (valueRes.responseBody == "") {
+                                Log.w(
+                                    ViewModelTAG,
+                                    "Received HTTP response with Code: ${valueRes.responseCode}, but empty response body!"
+                                )
+                            } else {
+                                RGBAModel.parseStringToModel(valueRes.responseBody)
+                                    .onSuccess { rgba ->
+                                        setAllValuesAbsolute(rgba.r, rgba.g, rgba.b, rgba.a)
+                                    }.onFailure {
+                                        Log.e(
                                             ViewModelTAG,
-                                            "Received HTTP response with Code: ${valueRes.responseCode}, but not response body!"
+                                            "On parsing getValues result: ${it.localizedMessage}"
                                         )
                                     }
-                                } else {
-                                    Log.w(
-                                        ViewModelTAG,
-                                        "Received HTTP response with Code: ${valueRes.responseCode}, Msg: ${valueRes.responseBody}"
-                                    )
-                                }
-                            }.onFailure { valueErr ->
-                                isReachable = false
-                                Log.e(ViewModelTAG, "API is not reachable!")
-                                valueErr.localizedMessage?.let {
-                                    Log.e(ViewModelTAG, it)
-                                }
                             }
                         } else {
-                            isReachable = true
                             Log.w(
                                 ViewModelTAG,
-                                "Received HTTP response with Code: ${res.responseCode}, Msg: ${res.responseBody}"
+                                "Received HTTP response with Error Code: ${valueRes.responseCode}, Msg: ${valueRes.responseBody}"
                             )
                         }
-                    }.onFailure { err ->
+                    }.onFailure { valueErr ->
                         isReachable = false
-                        Log.e(ViewModelTAG, "API is not reachable!")
-                        err.localizedMessage?.let {
-                            Log.e(ViewModelTAG, it)
-                        }
+                        Log.e(
+                            ViewModelTAG,
+                            "API is not reachable! Error: ${valueErr.localizedMessage}"
+                        )
                     }
                 }
             }
-            rgbModel.value = result
+            rgbaModel.value = result
         }
     }
 
-    fun getRGBModel(): LiveData<RGBModel> {
-        return rgbModel
+
+    fun getRGBModel(): LiveData<RGBAModel> {
+        return rgbaModel
     }
 
     fun changeRedChannel(value: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            rgbModel.value?.let { model ->
-                // only change red value if the requested value is ok
-                if (model.setAbsoluteRedValue(value)) {
-                    api.setRedValue(model.redValue).onSuccess {
-                        if (it.responseCode != 200) {
-                            Log.w(
-                                ViewModelTAG,
-                                "Something went wrong when trying to change red channel! HTTP Code: ${it.responseCode} ${it.responseBody}"
-                            )
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                RGBAModel().apply {
+                    rgbaModel.value?.let { model ->
+                        if (model.setAbsoluteRedValue(value)) {
+                            api.setRedValue(test_endpoint, test_port, model.redValue)
+                                .onSuccess {
+                                    if (it.responseCode != 200) {
+                                        Log.w(
+                                            ViewModelTAG,
+                                            "Something went wrong when trying to change red channel! HTTP Code: ${it.responseCode} ${it.responseBody}"
+                                        )
+                                    } else {
+                                        RGBAModel.parseStringToModel(it.responseBody)
+                                            .onSuccess { rgba ->
+                                                setAllValuesAbsolute(rgba.r, rgba.g, rgba.b, rgba.a)
+                                            }.onFailure { err ->
+                                                Log.e(
+                                                    ViewModelTAG,
+                                                    "Could not interpret red channel response value!! Error: ${err.localizedMessage}"
+                                                )
+                                            }
+
+                                    }
+                                }.onFailure { err ->
+                                    Log.e(
+                                        ViewModelTAG,
+                                        "Could not change red channel! Error: $err"
+                                    )
+                                }
                         }
-                    }.onFailure { err ->
-                        Log.e(ViewModelTAG, "Could not change red channel! Error: $err")
                     }
                 }
             }
+            rgbaModel.value = result
         }
     }
 
     fun changeGreenChannel(value: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            rgbModel.value?.let { model ->
-                if (model.setAbsoluteGreenValue(value)) {
-                    api.setGreenValue(model.greenValue).onSuccess {
-                        if (it.responseCode != 200) {
-                            Log.w(
-                                ViewModelTAG,
-                                "Something went wrong when trying to change green channel! HTTP Code: ${it.responseCode} ${it.responseBody}"
-                            )
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                RGBAModel().apply {
+                    rgbaModel.value?.let { model ->
+                        if (model.setAbsoluteGreenValue(value)) {
+                            api.setGreenValue(test_endpoint, test_port, model.greenValue)
+                                .onSuccess {
+                                    if (it.responseCode != 200) {
+                                        Log.w(
+                                            ViewModelTAG,
+                                            "Something went wrong when trying to change green channel! HTTP Code: ${it.responseCode} ${it.responseBody}"
+                                        )
+                                    } else {
+                                        RGBAModel.parseStringToModel(it.responseBody)
+                                            .onSuccess { rgba ->
+                                                setAllValuesAbsolute(rgba.r, rgba.g, rgba.b, rgba.a)
+                                            }.onFailure { err ->
+                                                Log.e(
+                                                    ViewModelTAG,
+                                                    "Could not interpret green channel response value!! Error: ${err.localizedMessage}"
+                                                )
+                                            }
+
+                                    }
+                                }.onFailure { err ->
+                                    Log.e(
+                                        ViewModelTAG,
+                                        "Could not change green channel! Error: $err"
+                                    )
+                                }
                         }
-                    }.onFailure { err ->
-                        Log.e(ViewModelTAG, "Could not change green channel! Error: $err")
                     }
                 }
             }
+            rgbaModel.value = result
         }
     }
 
     fun changeBlueChannel(value: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            rgbModel.value?.let { model ->
-                if (model.setAbsoluteBlueValue(value)) {
-                    api.setBlueValue(model.blueValue).onSuccess {
-                        if (it.responseCode != 200) {
-                            Log.w(
-                                ViewModelTAG,
-                                "Something went wrong when trying to change blue channel! HTTP Code: ${it.responseCode}  ${it.responseBody}"
-                            )
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                RGBAModel().apply {
+                    rgbaModel.value?.let { model ->
+                        if (model.setAbsoluteBlueValue(value)) {
+                            api.setBlueValue(test_endpoint, test_port, model.blueValue)
+                                .onSuccess {
+                                    if (it.responseCode != 200) {
+                                        Log.w(
+                                            ViewModelTAG,
+                                            "Something went wrong when trying to change blue channel! HTTP Code: ${it.responseCode} ${it.responseBody}"
+                                        )
+                                    } else {
+                                        RGBAModel.parseStringToModel(it.responseBody)
+                                            .onSuccess { rgba ->
+                                                setAllValuesAbsolute(rgba.r, rgba.g, rgba.b, rgba.a)
+                                            }.onFailure { err ->
+                                                Log.e(
+                                                    ViewModelTAG,
+                                                    "Could not interpret blue channel response value!! Error: ${err.localizedMessage}"
+                                                )
+                                            }
+
+                                    }
+                                }.onFailure { err ->
+                                    Log.e(
+                                        ViewModelTAG,
+                                        "Could not change blue channel! Error: $err"
+                                    )
+                                }
                         }
-                    }.onFailure { err ->
-                        Log.e(ViewModelTAG, "Could not change blue channel! Error: $err")
                     }
                 }
             }
+            rgbaModel.value = result
         }
     }
 
     fun changeBrightness(value: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            rgbModel.value?.let { model ->
-                if (model.setBrightnessValue(value)) {
-                    api.setBrightnessValue(model.brightness).onSuccess {
+            rgbaModel.value?.let { model ->
+                if (model.setAlphaValue(value)) {
+                    api.setAlphaValue(test_endpoint, test_port, model.alpha).onSuccess {
                         if (it.responseCode != 200) {
                             Log.w(
                                 ViewModelTAG,

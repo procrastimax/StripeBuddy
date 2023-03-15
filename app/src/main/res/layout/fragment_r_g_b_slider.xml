@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/slider_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Widget.MaterialComponents.Slider"
@@ -131,9 +130,9 @@
         android:layout_marginEnd="16dp"
         android:stepSize="1"
         android:theme="@style/Theme.StripeBuddy"
-        android:value="100"
+        android:value="255"
         android:valueFrom="0"
-        android:valueTo="100"
+        android:valueTo="255"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -154,7 +153,6 @@
         app:layout_constraintTop_toBottomOf="@+id/slider_r" />
 
     <TextView
-        android:id="@+id/tv_r_255"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -174,7 +172,6 @@
         app:layout_constraintTop_toBottomOf="@+id/slider_g" />
 
     <TextView
-        android:id="@+id/tv_g_255"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -194,7 +191,6 @@
         app:layout_constraintTop_toBottomOf="@+id/slider_b" />
 
     <TextView
-        android:id="@+id/tv_b_255"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -204,7 +200,6 @@
         app:layout_constraintTop_toBottomOf="@+id/slider_b" />
 
     <TextView
-        android:id="@+id/tv_brightness_0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -215,11 +210,10 @@
         app:layout_constraintTop_toBottomOf="@+id/slider_brightness" />
 
     <TextView
-        android:id="@+id/tv_brightness_100"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:text="100"
+        android:text="255"
         app:layout_constraintEnd_toEndOf="@+id/slider_brightness"
         app:layout_constraintTop_toBottomOf="@+id/slider_brightness" />
 

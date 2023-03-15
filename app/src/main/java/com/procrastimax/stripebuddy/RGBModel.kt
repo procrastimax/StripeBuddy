@@ -1,6 +1,6 @@
 package com.procrastimax.stripebuddy
 
-data class RGBModel(val r: Int = 0, val g: Int = 0, val b: Int = 0, val br: Int = 100) {
+data class RGBAModel(val r: Int = 0, val g: Int = 0, val b: Int = 0, val a: Int = 255) {
 
     var redValue: Int = 0
         private set
@@ -11,14 +11,14 @@ data class RGBModel(val r: Int = 0, val g: Int = 0, val b: Int = 0, val br: Int 
     var blueValue: Int = 0
         private set
 
-    var brightness: Int = 100
+    var alpha: Int = 100
         private set
 
     init {
         setAbsoluteRedValue(r)
         setAbsoluteGreenValue(g)
         setAbsoluteBlueValue(b)
-        setBrightnessValue(br)
+        setAlphaValue(a)
     }
 
     /**
@@ -64,15 +64,19 @@ data class RGBModel(val r: Int = 0, val g: Int = 0, val b: Int = 0, val br: Int 
     }
 
     /**
-     * Sets the all channels to the absolute value
-     * @param value : Int (0-255)
-     * @return Boolean - whether the input param is within the valid range
+     * Sets the all channels (RGBA) to the absolute value
+     * @param r,g,b,a : Int (0-255)
+     * @return Boolean - whether the inputs params are within the valid range
      */
-    fun setAllValuesAbsolute(value: Int): Boolean {
-        return if (checkAbsoluteValue(value)) {
-            this.redValue = value
-            this.greenValue = value
-            this.blueValue = value
+    fun setAllValuesAbsolute(r: Int, g: Int, b: Int, a: Int): Boolean {
+        return if (checkAbsoluteValue(r) && checkAbsoluteValue(g) && checkAbsoluteValue(b) && checkAbsoluteValue(
+                a
+            )
+        ) {
+            this.redValue = r
+            this.greenValue = g
+            this.blueValue = b
+            this.alpha = a
             true
         } else {
             false
@@ -81,12 +85,12 @@ data class RGBModel(val r: Int = 0, val g: Int = 0, val b: Int = 0, val br: Int 
 
     /**
      * Sets the brightness value and scales all other channels according to the set brightness value
-     * @param brightness : Int (0-100)
+     * @param alpha : Int (0-255)
      * @return Boolean - whether the input param is within the valid range
      **/
-    fun setBrightnessValue(brightness: Int): Boolean {
-        return if (checkRelativeValue(brightness)) {
-            this.brightness = brightness
+    fun setAlphaValue(brightness: Int): Boolean {
+        return if (checkAbsoluteValue(brightness)) {
+            this.alpha = brightness
             true
         } else {
             false
@@ -97,35 +101,31 @@ data class RGBModel(val r: Int = 0, val g: Int = 0, val b: Int = 0, val br: Int 
         return (value in MIN_ABSOLUTE_VALUE..MAX_ABSOLUTE_VALUE)
     }
 
-    private fun checkRelativeValue(value: Int): Boolean {
-        return (value in 0..100)
-    }
-
     override fun toString(): String {
-        return "RGBViewModel(red_value=$redValue, green_value=$greenValue, blue_value=$blueValue, brightness=$brightness)"
+        return "RGBViewModel(red_value=$redValue, green_value=$greenValue, blue_value=$blueValue, brightness=$alpha)"
     }
 
     companion object {
         const val MIN_ABSOLUTE_VALUE: Int = 0
         const val MAX_ABSOLUTE_VALUE: Int = 255
 
-        fun parseStringToModel(inputStr: String): Result<RGBModel> {
+        fun parseStringToModel(inputStr: String): Result<RGBAModel> {
             val arr: List<String> = inputStr.split(",")
             return if (arr.size == 4) {
                 try {
                     Result.success(
-                        RGBModel(
+                        RGBAModel(
                             r = arr[0].toInt(),
                             g = arr[1].toInt(),
                             b = arr[2].toInt(),
-                            br = arr[3].toInt()
+                            a = arr[3].toInt()
                         )
                     )
                 } catch (e: NumberFormatException) {
-                    Result.failure(Exception("Could not properly format RGB and brightness values! Received string: $inputStr"))
+                    Result.failure(Exception("Could not properly format RGBA values! Received string: $inputStr"))
                 }
             } else {
-                Result.failure(Exception("Did not receive RGB and brightness value in proper format: R,G,B,Brightness! Received string: $inputStr"))
+                Result.failure(Exception("Did not receive RGBA value in proper format: R,G,B,A! Received string: $inputStr"))
             }
         }
     }

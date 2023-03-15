@@ -1,5 +1,6 @@
 package com.procrastimax.stripebuddy
 
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -57,7 +58,7 @@ class RGBSliderFragment : Fragment() {
             redChannelSlider.value = it.redValue.toFloat()
             greenChannelSlider.value = it.greenValue.toFloat()
             blueChannelSlider.value = it.blueValue.toFloat()
-            brightnessChannelSlider.value = it.brightness.toFloat()
+            brightnessChannelSlider.value = it.alpha.toFloat()
 
             redChannelSlider.isEnabled = rgbViewModel.isReachable
             greenChannelSlider.isEnabled = rgbViewModel.isReachable
@@ -67,7 +68,7 @@ class RGBSliderFragment : Fragment() {
             tvRedValue.text = it.redValue.toString()
             tvGreenValue.text = it.greenValue.toString()
             tvBlueValue.text = it.blueValue.toString()
-            tvBrightnessValue.text = it.brightness.toString()
+            tvBrightnessValue.text = it.alpha.toString()
 
             if (!rgbViewModel.isReachable) {
                 Snackbar.make(view, "API is not reachable!", Snackbar.LENGTH_LONG).show()
@@ -86,44 +87,48 @@ class RGBSliderFragment : Fragment() {
         }
 
         redChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            @SuppressLint("RestrictedApi")
             override fun onStartTrackingTouch(slider: Slider) {
             }
 
+            @SuppressLint("RestrictedApi")
             override fun onStopTrackingTouch(slider: Slider) {
                 rgbViewModel.changeRedChannel(slider.value.toInt())
-                rgbViewModel.fetchColors()
             }
         })
 
         greenChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            @SuppressLint("RestrictedApi")
             override fun onStartTrackingTouch(slider: Slider) {
             }
 
+            @SuppressLint("RestrictedApi")
             override fun onStopTrackingTouch(slider: Slider) {
                 rgbViewModel.changeGreenChannel(slider.value.toInt())
-                rgbViewModel.fetchColors()
             }
         })
 
         blueChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            @SuppressLint("RestrictedApi")
             override fun onStartTrackingTouch(slider: Slider) {
             }
 
+            @SuppressLint("RestrictedApi")
             override fun onStopTrackingTouch(slider: Slider) {
                 rgbViewModel.changeBlueChannel(slider.value.toInt())
-                rgbViewModel.fetchColors()
             }
         })
 
         brightnessChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            @SuppressLint("RestrictedApi")
             override fun onStartTrackingTouch(slider: Slider) {
             }
 
+            @SuppressLint("RestrictedApi")
             override fun onStopTrackingTouch(slider: Slider) {
                 rgbViewModel.changeBrightness(
                     slider.value.toInt(),
                 )
-                rgbViewModel.fetchColors()
             }
         })
     }
