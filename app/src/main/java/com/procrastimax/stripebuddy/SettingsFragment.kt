@@ -24,7 +24,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         endpointPreference?.setOnPreferenceChangeListener { _, newValue ->
-            if (URLUtil.isValidUrl(newValue.toString())) {
+            /*if (URLUtil.isValidUrl(newValue.toString())) {
                 true
             } else {
                 Toast.makeText(
@@ -33,7 +33,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     Toast.LENGTH_LONG
                 ).show()
                 false
-            }
+            }*/
+            true
         }
 
         portNumberPreference?.setOnPreferenceChangeListener { _, newValue ->

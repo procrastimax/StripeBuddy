@@ -33,8 +33,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_settings -> {
-            val settingsFragment = SettingsFragment.newInstance()
-            switchFragment(settingsFragment)
+            val settingsFragment = supportFragmentManager.findFragmentByTag("settings")
+                ?: SettingsFragment.newInstance()
+            if (!settingsFragment.isAdded) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.frameLayout, settingsFragment, "settings")
+                    .setReorderingAllowed(true)
+                    .addToBackStack(null)
+                    .commit()
+            }
             true
         }
         else -> {

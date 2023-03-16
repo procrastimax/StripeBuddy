@@ -11,7 +11,7 @@ data class RGBAModel(val r: Int = 0, val g: Int = 0, val b: Int = 0, val a: Int 
     var blueValue: Int = 0
         private set
 
-    var alpha: Int = 100
+    var alpha: Int = 255
         private set
 
     init {

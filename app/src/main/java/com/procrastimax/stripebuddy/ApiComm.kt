@@ -1,9 +1,11 @@
 package com.procrastimax.stripebuddy
 
+import android.widget.Toast
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import kotlin.coroutines.coroutineContext
 
 const val APICommTag = "ApiComm"
 
@@ -124,12 +126,16 @@ class APIComm {
      * Creates and executes the API call to get all channel values.
      */
     fun getValues(endpoint: String, port: Int): Result<APIResponse> {
-        val url: HttpUrl =
-            HttpUrl.Builder().scheme("http").host(endpoint).port(port)
-                .addPathSegment(getValueURL)
-                .build()
-        val request: Request = Request.Builder().url(url).build()
-        return execRequest(request)
+        return try {
+            val url: HttpUrl =
+                HttpUrl.Builder().scheme("http").host(endpoint).port(port)
+                    .addPathSegment(getValueURL)
+                    .build()
+            val request: Request = Request.Builder().url(url).build()
+            execRequest(request)
+        } catch (e : java.lang.IllegalArgumentException) {
+            Result.failure(e)
+        }
     }
 
     /**

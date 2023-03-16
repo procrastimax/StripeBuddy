@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.preference.PreferenceManager
 import com.google.android.material.slider.Slider
 import com.google.android.material.snackbar.Snackbar
 
@@ -29,14 +31,31 @@ class RGBSliderFragment : Fragment() {
     }
 
     // states for graying out sliders
-    private val states = arrayOf(
+    private val state = arrayOf(
         intArrayOf(-android.R.attr.state_enabled),
     )
 
     // colors for graying out sliders
-    private val colors = intArrayOf(
-        Color.GRAY,
+    private val color = intArrayOf(
+        Color.GRAY
     )
+
+    val rgbViewModel: RGBViewModel by viewModels()
+
+
+    private var apiPort: Int = 80
+    private var apiEndpoint: String = "192.168.179.120"
+
+    private fun updateApiSettings() {
+        val sharedPreference = PreferenceManager.getDefaultSharedPreferences(context!!)
+        apiPort = sharedPreference.getString("port", "80").toString().toInt()
+        apiEndpoint = sharedPreference.getString("endpoint", "192.168.179.120").toString()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        rgbViewModel.isreachable = true
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,40 +70,49 @@ class RGBSliderFragment : Fragment() {
         val tvBlueValue = view.findViewById<TextView>(R.id.tv_val_b_channel)
         val tvBrightnessValue = view.findViewById<TextView>(R.id.tv_val_brightness_channel)
 
-        val rgbViewModel: RGBViewModel by viewModels()
+        updateApiSettings()
+        rgbViewModel.fetchColors(endpoint = apiEndpoint, apiPort)
+
 
         rgbViewModel.getRGBModel().observe(this) {
+            Log.d("SliderFragment", "change observed: $it")
+
             // update UI
             redChannelSlider.value = it.redValue.toFloat()
             greenChannelSlider.value = it.greenValue.toFloat()
             blueChannelSlider.value = it.blueValue.toFloat()
             brightnessChannelSlider.value = it.alpha.toFloat()
 
-            redChannelSlider.isEnabled = rgbViewModel.isReachable
-            greenChannelSlider.isEnabled = rgbViewModel.isReachable
-            blueChannelSlider.isEnabled = rgbViewModel.isReachable
-            brightnessChannelSlider.isEnabled = rgbViewModel.isReachable
+            redChannelSlider.isEnabled = rgbViewModel.isreachable
+            greenChannelSlider.isEnabled = rgbViewModel.isreachable
+            blueChannelSlider.isEnabled = rgbViewModel.isreachable
+            brightnessChannelSlider.isEnabled = rgbViewModel.isreachable
 
             tvRedValue.text = it.redValue.toString()
             tvGreenValue.text = it.greenValue.toString()
             tvBlueValue.text = it.blueValue.toString()
             tvBrightnessValue.text = it.alpha.toString()
 
-            if (!rgbViewModel.isReachable) {
-                Snackbar.make(view, "API is not reachable!", Snackbar.LENGTH_LONG).show()
-                redChannelSlider.trackTintList = ColorStateList(states, colors)
-                redChannelSlider.thumbTintList = ColorStateList(states, colors)
+            if (!rgbViewModel.isreachable) {
+                Snackbar.make(
+                    activity!!.findViewById(R.id.activity_parent),
+                    "API is not reachable!",
+                    Snackbar.LENGTH_LONG
+                ).show()
+                redChannelSlider.trackTintList = ColorStateList(state, color)
+                redChannelSlider.thumbTintList = ColorStateList(state, color)
 
-                greenChannelSlider.trackTintList = ColorStateList(states, colors)
-                greenChannelSlider.thumbTintList = ColorStateList(states, colors)
+                greenChannelSlider.trackTintList = ColorStateList(state, color)
+                greenChannelSlider.thumbTintList = ColorStateList(state, color)
 
-                blueChannelSlider.trackTintList = ColorStateList(states, colors)
-                blueChannelSlider.thumbTintList = ColorStateList(states, colors)
+                blueChannelSlider.trackTintList = ColorStateList(state, color)
+                blueChannelSlider.thumbTintList = ColorStateList(state, color)
 
-                brightnessChannelSlider.trackTintList = ColorStateList(states, colors)
-                brightnessChannelSlider.thumbTintList = ColorStateList(states, colors)
+                brightnessChannelSlider.trackTintList = ColorStateList(state, color)
+                brightnessChannelSlider.thumbTintList = ColorStateList(state, color)
             }
         }
+
 
         redChannelSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
             @SuppressLint("RestrictedApi")
@@ -93,7 +121,7 @@ class RGBSliderFragment : Fragment() {
 
             @SuppressLint("RestrictedApi")
             override fun onStopTrackingTouch(slider: Slider) {
-                rgbViewModel.changeRedChannel(slider.value.toInt())
+                rgbViewModel.changeRedChannel(apiEndpoint, apiPort, slider.value.toInt())
             }
         })
 
@@ -104,7 +132,7 @@ class RGBSliderFragment : Fragment() {
 
             @SuppressLint("RestrictedApi")
             override fun onStopTrackingTouch(slider: Slider) {
-                rgbViewModel.changeGreenChannel(slider.value.toInt())
+                rgbViewModel.changeGreenChannel(apiEndpoint, apiPort, slider.value.toInt())
             }
         })
 
@@ -115,7 +143,7 @@ class RGBSliderFragment : Fragment() {
 
             @SuppressLint("RestrictedApi")
             override fun onStopTrackingTouch(slider: Slider) {
-                rgbViewModel.changeBlueChannel(slider.value.toInt())
+                rgbViewModel.changeBlueChannel(apiEndpoint, apiPort, slider.value.toInt())
             }
         })
 
@@ -127,6 +155,7 @@ class RGBSliderFragment : Fragment() {
             @SuppressLint("RestrictedApi")
             override fun onStopTrackingTouch(slider: Slider) {
                 rgbViewModel.changeBrightness(
+                    apiEndpoint, apiPort,
                     slider.value.toInt(),
                 )
             }
