@@ -5,6 +5,8 @@ import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier
+import javax.net.ssl.SSLSocketFactory
 import kotlin.coroutines.coroutineContext
 
 const val APICommTag = "ApiComm"
@@ -48,7 +50,7 @@ class APIComm {
      */
     fun setAlphaValue(endpoint: String, port: Int, alpha: Int): Result<APIResponse> {
         val url: HttpUrl =
-            HttpUrl.Builder().scheme("http").host(endpoint).port(port)
+            HttpUrl.Builder().scheme("https").host(endpoint).port(port)
                 .addPathSegment(setValuesURL)
                 .addQueryParameter("a", alpha.toString())
                 .build()
@@ -62,7 +64,7 @@ class APIComm {
      */
     fun setRedValue(endpoint: String, port: Int, red: Int): Result<APIResponse> {
         val url: HttpUrl =
-            HttpUrl.Builder().scheme("http").host(endpoint).port(port)
+            HttpUrl.Builder().scheme("https").host(endpoint).port(port)
                 .addPathSegment(setValuesURL)
                 .addQueryParameter("r", red.toString())
                 .build()
@@ -76,7 +78,7 @@ class APIComm {
      */
     fun setGreenValue(endpoint: String, port: Int, green: Int): Result<APIResponse> {
         val url: HttpUrl =
-            HttpUrl.Builder().scheme("http").host(endpoint).port(port)
+            HttpUrl.Builder().scheme("https").host(endpoint).port(port)
                 .addPathSegment(setValuesURL)
                 .addQueryParameter("g", green.toString())
                 .build()
@@ -90,7 +92,7 @@ class APIComm {
      */
     fun setBlueValue(endpoint: String, port: Int, blue: Int): Result<APIResponse> {
         val url: HttpUrl =
-            HttpUrl.Builder().scheme("http").host(endpoint).port(port)
+            HttpUrl.Builder().scheme("https").host(endpoint).port(port)
                 .addPathSegment(setValuesURL)
                 .addQueryParameter("b", blue.toString())
                 .build()
@@ -111,7 +113,7 @@ class APIComm {
         alpha: Int
     ): Result<APIResponse> {
         val url: HttpUrl =
-            HttpUrl.Builder().scheme("http").host(endpoint).port(port)
+            HttpUrl.Builder().scheme("https").host(endpoint).port(port)
                 .addPathSegment(setValuesURL)
                 .addQueryParameter("r", red.toString())
                 .addQueryParameter("g", green.toString())
@@ -128,7 +130,7 @@ class APIComm {
     fun getValues(endpoint: String, port: Int): Result<APIResponse> {
         return try {
             val url: HttpUrl =
-                HttpUrl.Builder().scheme("http").host(endpoint).port(port)
+                HttpUrl.Builder().scheme("https").host(endpoint).port(port)
                     .addPathSegment(getValueURL)
                     .build()
             val request: Request = Request.Builder().url(url).build()
@@ -143,7 +145,7 @@ class APIComm {
      */
     fun checkHealth(endpoint: String, port: Int): Result<APIResponse> {
         val url: HttpUrl =
-            HttpUrl.Builder().scheme("http").host(endpoint).port(port)
+            HttpUrl.Builder().scheme("https").host(endpoint).port(port)
                 .addPathSegment(healthURL).build()
         val request: Request = Request.Builder().url(url).build()
         return execRequest(request)
