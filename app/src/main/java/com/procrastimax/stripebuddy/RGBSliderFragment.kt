@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -44,13 +43,13 @@ class RGBSliderFragment : Fragment() {
     val rgbViewModel: RGBViewModel by viewModels()
 
 
-    var apiPort: Int = 80
-    var apiEndpoint: String = "192.168.179.120"
+    var apiPort: Int = 443
+    var apiEndpoint: String = "stripe.local"
 
     private fun updateApiSettings() {
         val sharedPreference = PreferenceManager.getDefaultSharedPreferences(context!!)
-        apiPort = sharedPreference.getString("port", "80").toString().toInt()
-        apiEndpoint = sharedPreference.getString("endpoint", "192.168.179.120").toString()
+        apiPort = sharedPreference.getString("port", "443").toString().toInt()
+        apiEndpoint = sharedPreference.getString("endpoint", "stripe.local").toString()
     }
 
     override fun onPause() {
@@ -72,7 +71,7 @@ class RGBSliderFragment : Fragment() {
         val tvBrightnessValue = view.findViewById<TextView>(R.id.tv_val_brightness_channel)
 
         updateApiSettings()
-        rgbViewModel.fetchColors(endpoint = apiEndpoint, apiPort)
+        rgbViewModel.fetchColors(apiEndpoint, apiPort)
 
 
         rgbViewModel.getRGBModel().observe(this) {
