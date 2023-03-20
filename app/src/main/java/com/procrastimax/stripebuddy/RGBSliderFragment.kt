@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -43,8 +44,8 @@ class RGBSliderFragment : Fragment() {
     val rgbViewModel: RGBViewModel by viewModels()
 
 
-    private var apiPort: Int = 80
-    private var apiEndpoint: String = "192.168.179.120"
+    var apiPort: Int = 80
+    var apiEndpoint: String = "192.168.179.120"
 
     private fun updateApiSettings() {
         val sharedPreference = PreferenceManager.getDefaultSharedPreferences(context!!)

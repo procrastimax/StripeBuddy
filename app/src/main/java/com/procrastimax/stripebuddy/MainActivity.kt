@@ -1,6 +1,7 @@
 package com.procrastimax.stripebuddy
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -16,13 +17,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         val sliderFragment = RGBSliderFragment.newInstance()
-        switchFragment(sliderFragment)
+        switchFragment(sliderFragment, "sliderFragment")
     }
 
-    private fun switchFragment(fragment: Fragment) {
+    private fun switchFragment(fragment: Fragment, tag : String) {
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.frameLayout, fragment)
+            .replace(R.id.frameLayout, fragment, tag)
             .commit()
     }
 
@@ -42,7 +43,12 @@ class MainActivity : AppCompatActivity() {
                     .addToBackStack(null)
                     .commit()
             }
-            true
+            super.onOptionsItemSelected(item)
+        }
+        R.id.action_reload -> {
+            val sliderFragment : RGBSliderFragment = supportFragmentManager.findFragmentByTag("sliderFragment") as RGBSliderFragment
+            sliderFragment.rgbViewModel.fetchColors(sliderFragment.apiEndpoint, sliderFragment.apiPort)
+            super.onOptionsItemSelected(item)
         }
         else -> {
             super.onOptionsItemSelected(item)
