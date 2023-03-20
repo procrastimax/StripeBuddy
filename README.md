@@ -1,13 +1,10 @@
-# StripeBuddy
+# <img title="Icon" alt="icon" width=20px src="screenshots/stripe-buddy-icon.png"> StripeBuddy
 ## Description
 This app is a native Android client for the [ESP-Stripe-Server](https://github.com/procrastimax/ESP32-LED-Stripe-Server.git).
 In the settings menu you can set the endpoint configuration (URL, Port) for your Stripe-Server.
 With this app it is possible to control all three 8-bit color channels (RGB) of your LED stripe and also set up the overall brightness (also in 8-bit).
 
 **Attention:** The app relies on HTTPS (no HTTP!), you therefore need to build the app on your own and I cannot provide a prebuilt APK. Read more in [Building](#building).
-
-
-<img title="Icon" alt="icon" width=120px src="screenshots/stripe-buddy-icon.png">
 
 ## Building
 The easiest way to build this app on your own is to download AndroidStudio, and import the whole repository.
