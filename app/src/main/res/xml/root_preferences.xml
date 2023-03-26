@@ -13,7 +13,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
-            android:defaultValue="443"
+            android:defaultValue="80"
             android:key="port"
             android:selectAllOnFocus="true"
             android:singleLine="true"

@@ -43,7 +43,7 @@ class RGBSliderFragment : Fragment() {
     val rgbViewModel: RGBViewModel by viewModels()
 
 
-    var apiPort: Int = 443
+    var apiPort: Int = 80
     var apiEndpoint: String = "stripe.local"
 
     private fun updateApiSettings() {
