@@ -15,6 +15,9 @@ For this follow the instructions in the [StripeServer](https://github.com/procra
 
 After creating your needed certificates, you have to import the CA certificate to `/raw/ca.crt`. The file `xml/network_security_config.xml` specifies this certificate.
 
+**Attention:**
+If you do not want to use TLS, and use unencrypted traffic to the Stripe-Server, than you do not need to execute the steps above.
+Instead you have to whitelist the server's domain/ IP address in the `xml/network_security_config.xml` file at `<domain includeSubdomains="true">stripe.local</domain>`.
 
 ## How does it look?
 <img title="screenshot 1" alt="screenshot 1" width=300px src="screenshots/Screenshot_1.png">
